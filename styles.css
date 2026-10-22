@@ -19,7 +19,8 @@
 
 html {
     scroll-behavior: smooth;
-    scroll-padding-top: 90px
+    scroll-padding-top: 90px;
+    scrollbar-gutter: stable;
 }
 
 body {
@@ -2111,9 +2112,18 @@ body {
   animation: profile-enter 360ms cubic-bezier(.2, 0, 0, 1) both;
 }
 
+.profile-dialog.is-closing {
+  animation: profile-exit 220ms cubic-bezier(.4, 0, .8, .5) both;
+}
+
 .profile-dialog::backdrop {
   background: rgba(38, 29, 31, .4);
   backdrop-filter: blur(3px);
+  animation: profile-backdrop-enter 240ms ease both;
+}
+
+.profile-dialog.is-closing::backdrop {
+  animation: profile-backdrop-exit 220ms ease both;
 }
 
 .profile-dialog-heading {
@@ -3027,6 +3037,12 @@ body {
   cursor: default;
 }
 
+.date-option.is-past:disabled {
+  background: #f2eee9;
+  color: #b6ada5;
+  opacity: .5;
+}
+
 .date-option[aria-pressed="true"] {
   border-color: var(--berry);
   background: var(--berry);
@@ -3313,6 +3329,21 @@ body {
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+@keyframes profile-exit {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(8px) scale(.99); }
+}
+
+@keyframes profile-backdrop-enter {
+  from { background: rgba(38, 29, 31, 0); backdrop-filter: blur(0); }
+  to { background: rgba(38, 29, 31, .4); backdrop-filter: blur(3px); }
+}
+
+@keyframes profile-backdrop-exit {
+  from { background: rgba(38, 29, 31, .4); backdrop-filter: blur(3px); }
+  to { background: rgba(38, 29, 31, 0); backdrop-filter: blur(0); }
+}
+
 @keyframes success-pop {
   0% { opacity: 0; transform: scale(.78); }
   55% { opacity: 1; transform: scale(1.04); }
@@ -3494,6 +3525,9 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .profile-dialog[open],
+  .profile-dialog.is-closing,
+  .profile-dialog::backdrop,
+  .profile-dialog.is-closing::backdrop,
   .success-icon,
   .success-ring,
   .success-check {
@@ -3919,10 +3953,8 @@ body {
   }
 }
 
-body.page-scroll-locked {
-  position: fixed;
-  inset-inline: 0;
-  width: 100%;
+html.modal-scroll-locked,
+html.modal-scroll-locked body {
   overflow: hidden;
 }
 

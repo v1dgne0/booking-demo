@@ -51,42 +51,58 @@ const pickerConfig = {
 };
 const selected = { service: services[0].id, master: services[0].master, date: "", time: "" };
 let calendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-let lockedPageScrollY = 0;
 let modalLockCount = 0;
 let scrollToBookingOnMasterClose = false;
+let scrollToBookingOnProfileClose = false;
 let datePickerInteracted = false;
 const modalInvokers = new WeakMap();
+const modalCloseTimers = new WeakMap();
 
 function showModal(dialog) {
   if (dialog.open) return;
+  const closeTimer = modalCloseTimers.get(dialog);
+  if (closeTimer) window.clearTimeout(closeTimer);
+  modalCloseTimers.delete(dialog);
+  dialog.classList.remove("is-closing");
   modalInvokers.set(dialog, document.activeElement);
   if (modalLockCount === 0) {
-    lockedPageScrollY = window.scrollY;
-    document.body.style.top = `-${lockedPageScrollY}px`;
-    document.body.classList.add("page-scroll-locked");
     document.documentElement.classList.add("modal-scroll-locked");
   }
   modalLockCount += 1;
   dialog.showModal();
 }
+function closeModal(dialog) {
+  if (!dialog.open || dialog.classList.contains("is-closing")) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    dialog.close();
+    return;
+  }
+  dialog.classList.add("is-closing");
+  const timer = window.setTimeout(() => {
+    modalCloseTimers.delete(dialog);
+    dialog.close();
+  }, 220);
+  modalCloseTimers.set(dialog, timer);
+}
 function unlockPageScroll(event) {
   const dialog = event.currentTarget;
+  const closeTimer = modalCloseTimers.get(dialog);
+  if (closeTimer) window.clearTimeout(closeTimer);
+  modalCloseTimers.delete(dialog);
+  dialog.classList.remove("is-closing");
   const invoker = modalInvokers.get(dialog);
   modalInvokers.delete(dialog);
   modalLockCount = Math.max(0, modalLockCount - 1);
   if (modalLockCount === 0) {
-    const restoreY = lockedPageScrollY;
-    document.body.classList.remove("page-scroll-locked");
-    document.body.style.top = "";
-    window.requestAnimationFrame(() => {
-      window.scrollTo(0, restoreY);
-      if (invoker?.isConnected) invoker.focus({ preventScroll: true });
-      window.scrollTo(0, restoreY);
-      document.documentElement.classList.remove("modal-scroll-locked");
-    });
+    document.documentElement.classList.remove("modal-scroll-locked");
   }
+  if (invoker?.isConnected) invoker.focus({ preventScroll: true });
 }
 [profileDialog, masterDialog, colorsDialog].forEach(dialog => dialog.addEventListener("close", unlockPageScroll));
+[profileDialog, masterDialog, colorsDialog].forEach(dialog => dialog.addEventListener("cancel", event => {
+  event.preventDefault();
+  closeModal(dialog);
+}));
 
 function loadBookings() {
   try {
@@ -219,7 +235,11 @@ function renderProfile() {
   newBooking.className = "button button-small profile-new-booking";
   newBooking.href = "#booking";
   newBooking.textContent = "Новая запись";
-  newBooking.addEventListener("click", () => profileDialog.close());
+  newBooking.addEventListener("click", event => {
+    event.preventDefault();
+    scrollToBookingOnProfileClose = true;
+    closeProfile();
+  });
   profileContent.append(newBooking);
   updateProfileButton();
 }
@@ -471,14 +491,17 @@ function renderDates() {
     const date = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), day);
     const key = dateKey(date);
     const isInRange = dates.some(item => dateKey(item) === key);
-    const busy = busySlots(currentMaster(), date, bookings);
-    const free = availableSlots(currentMaster(), date, currentService().duration, bookings);
+    const isPast = date <= today;
     const canSelect = isInRange && currentMaster().days.includes(date.getDay()) && date > today;
+    const busy = canSelect ? busySlots(currentMaster(), date, bookings) : [];
+    const free = canSelect ? availableSlots(currentMaster(), date, currentService().duration, bookings) : [];
     const selectedDay = key === selected.date;
-    const status = free.length ? `${free.length} свободно` : busy.length ? "всё занято" : "—";
     const spokenDate = new Intl.DateTimeFormat("ru-RU", { weekday: "long", day: "numeric", month: "long" }).format(date);
-    const accessibleStatus = `${spokenDate}, ${free.length ? `${free.length} свободных слота` : "нет свободных слотов"}${busy.length ? `, ${busy.length} занято` : ""}`;
-    cells.push(`<button class="date-option${free.length ? " has-free" : ""}${busy.length ? " has-busy" : ""}" type="button" data-date="${key}" aria-pressed="${selectedDay}" aria-label="${accessibleStatus}" title="${accessibleStatus}" ${canSelect ? "" : "disabled"}><span class="calendar-day-number">${day}</span><span class="calendar-day-status">${status}</span></button>`);
+    const status = isPast ? "" : !isInRange ? "" : !currentMaster().days.includes(date.getDay()) ? "Выходной" : free.length ? `${free.length} свободно` : busy.length ? "всё занято" : "—";
+    const accessibleStatus = isPast
+      ? `${spokenDate}, дата прошла`
+      : `${spokenDate}${status ? `, ${status}` : ", запись недоступна"}${busy.length ? `, ${busy.length} занято` : ""}`;
+    cells.push(`<button class="date-option${isPast ? " is-past" : ""}${free.length ? " has-free" : ""}${busy.length ? " has-busy" : ""}" type="button" data-date="${key}" aria-pressed="${selectedDay}" aria-label="${accessibleStatus}" title="${accessibleStatus}" ${canSelect ? "" : "disabled"}><span class="calendar-day-number">${day}</span>${status ? `<span class="calendar-day-status">${status}</span>` : ""}</button>`);
   }
   calendarMonthGrid.innerHTML = cells.join("");
   const selectedIndex = dates.findIndex(date => dateKey(date) === selected.date);
@@ -634,19 +657,18 @@ function showBookingSuccess() {
   const card = success.closest(".booking-card");
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const startHeight = card.getBoundingClientRect().height;
-  const cardTop = card.getBoundingClientRect().top;
-  if (cardTop < 12 || cardTop > 120) {
-    card.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
-  }
   form.hidden = true;
   success.hidden = false;
+  success.classList.add("is-entering");
+  const endHeight = card.getBoundingClientRect().height;
   if (reduceMotion) {
+    success.classList.remove("is-entering");
     success.focus({ preventScroll: true });
     return;
   }
-  success.classList.add("is-entering");
   card.style.height = `${startHeight}px`;
   card.classList.add("is-resizing");
+  void card.offsetHeight;
 
   let finished = false;
   const finish = () => {
@@ -666,10 +688,8 @@ function showBookingSuccess() {
   const fallback = window.setTimeout(finish, 700);
   card.addEventListener("transitionend", onTransitionEnd);
   window.requestAnimationFrame(() => {
-    window.requestAnimationFrame(() => {
-      card.style.height = `${card.scrollHeight}px`;
-      success.classList.remove("is-entering");
-    });
+    card.style.height = `${endHeight}px`;
+    success.classList.remove("is-entering");
   });
 }
 form.addEventListener("submit", event => {
@@ -747,7 +767,7 @@ profileToggle.addEventListener("click", () => {
   if (!currentProfile) profilePhoneInput.focus();
 });
 function closeProfile() {
-  if (profileDialog.open) profileDialog.close();
+  closeModal(profileDialog);
   profileToggle.setAttribute("aria-expanded", "false");
 }
 function renderMasterDetails(master) {
@@ -770,7 +790,7 @@ function renderMasterDetails(master) {
   bookingLink.addEventListener("click", event => {
     event.preventDefault();
     scrollToBookingOnMasterClose = true;
-    masterDialog.close();
+    closeModal(masterDialog);
     masterSelect.value = master.id;
     masterSelect.dispatchEvent(new Event("change", { bubbles: true }));
   });
@@ -828,14 +848,14 @@ document.querySelectorAll("[data-master]").forEach(button => button.addEventList
   renderMasterDetails(master);
   showModal(masterDialog);
 }));
-document.querySelector("#master-close").addEventListener("click", () => masterDialog.close());
+document.querySelector("#master-close").addEventListener("click", () => closeModal(masterDialog));
 masterDialog.addEventListener("close", () => {
   if (!scrollToBookingOnMasterClose) return;
   scrollToBookingOnMasterClose = false;
   window.requestAnimationFrame(() => document.querySelector("#booking").scrollIntoView({ behavior: "smooth", block: "start" }));
 });
 masterDialog.addEventListener("click", event => {
-  if (event.target === masterDialog) masterDialog.close();
+  if (event.target === masterDialog) closeModal(masterDialog);
 });
 function renderPalette() {
   paletteGrid.innerHTML = nailColors.map(color => `
@@ -848,12 +868,17 @@ document.querySelector("#show-all-colors").addEventListener("click", () => {
   renderPalette();
   showModal(colorsDialog);
 });
-document.querySelector("#colors-close").addEventListener("click", () => colorsDialog.close());
+document.querySelector("#colors-close").addEventListener("click", () => closeModal(colorsDialog));
 colorsDialog.addEventListener("click", event => {
-  if (event.target === colorsDialog) colorsDialog.close();
+  if (event.target === colorsDialog) closeModal(colorsDialog);
 });
 document.querySelector("#profile-close").addEventListener("click", closeProfile);
-profileDialog.addEventListener("close", () => profileToggle.setAttribute("aria-expanded", "false"));
+profileDialog.addEventListener("close", () => {
+  profileToggle.setAttribute("aria-expanded", "false");
+  if (!scrollToBookingOnProfileClose) return;
+  scrollToBookingOnProfileClose = false;
+  window.requestAnimationFrame(() => document.querySelector("#booking").scrollIntoView({ behavior: "smooth", block: "start" }));
+});
 profileDialog.addEventListener("click", event => {
   if (event.target === profileDialog) closeProfile();
 });
