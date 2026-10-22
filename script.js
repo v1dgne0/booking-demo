@@ -7,12 +7,13 @@ const services = [
   { id: "removal", name: "Снятие + маникюр", description: "Снятие покрытия и чистый маникюр", duration: 90, price: 1900, master: "alina" }
 ];
 const masters = [
-  { id: "alina", name: "Алина", specialty: "Мягкий маникюр · однотон", days: [1, 2, 3, 4, 5, 6], slots: ["10:00", "12:30", "15:00", "17:30"] },
-  { id: "mira", name: "Мира", specialty: "Форма · лаконичный дизайн", days: [1, 2, 3, 4, 5], slots: ["11:00", "13:30", "16:00", "18:00"] },
-  { id: "nika", name: "Ника", specialty: "Укрепление · тонкие детали", days: [2, 3, 4, 5, 6], slots: ["10:30", "13:00", "15:30", "18:00"] }
+  { id: "alina", name: "Алина", specialty: "Мягкий маникюр · однотон", experience: "6 лет", bio: "Любит чистую форму и спокойные оттенки. Помогает подобрать покрытие, которое удобно носить каждый день.", days: [1, 2, 3, 4, 5, 6], slots: ["10:00", "12:30", "15:00", "17:30"], works: [{ title: "Ягодный глянец", style: "nail-red" }, { title: "Тёплый нюд", style: "nail-nude" }, { title: "Чистая форма", style: "nail-olive" }] },
+  { id: "mira", name: "Мира", specialty: "Форма · лаконичный дизайн", experience: "4 года", bio: "Сочетает аккуратную архитектуру ногтя с простыми деталями. Особенно любит нюдовые оттенки и тонкие линии.", days: [1, 2, 3, 4, 5], slots: ["11:00", "13:30", "16:00", "18:00"], works: [{ title: "Тихий нюд", style: "nail-nude" }, { title: "Ягодный акцент", style: "nail-red" }, { title: "Тонкая линия", style: "nail-olive" }] },
+  { id: "nika", name: "Ника", specialty: "Укрепление · тонкие детали", experience: "8 лет", bio: "Работает с укреплением и деликатным дизайном. Внимательно относится к комфорту и состоянию натуральных ногтей.", days: [2, 3, 4, 5, 6], slots: ["10:30", "13:00", "15:30", "18:00"], works: [{ title: "Оливковая линия", style: "nail-olive" }, { title: "Мягкий нюд", style: "nail-nude" }, { title: "Вишнёвый цвет", style: "nail-red" }] }
 ];
 const STORAGE_KEY = "yagoda-demo-bookings-v1";
 const PROFILE_KEY = "yagoda-demo-profile-v1";
+const REVIEWS_KEY = "yagoda-demo-reviews-v1";
 const serviceSelect = document.querySelector("#service-select");
 const masterSelect = document.querySelector("#master-select");
 const dateOptions = document.querySelector("#date-options");
@@ -24,6 +25,11 @@ const profileDialog = document.querySelector("#profile-dialog");
 const profileContent = document.querySelector("#profile-content");
 const profilePhoneInput = document.querySelector("#profile-phone");
 const profileError = document.querySelector("#profile-error");
+const masterDialog = document.querySelector("#master-dialog");
+const masterDetailBody = document.querySelector("#master-detail-body");
+const calendarTitle = document.querySelector("#calendar-month-title");
+const calendarPrev = document.querySelector("#calendar-prev");
+const calendarNext = document.querySelector("#calendar-next");
 const serviceTrigger = document.querySelector("#service-trigger");
 const masterTrigger = document.querySelector("#master-trigger");
 const serviceOptions = document.querySelector("#service-options");
@@ -33,6 +39,7 @@ const pickerConfig = {
   master: { field: document.querySelector("#master-picker"), input: masterSelect, trigger: masterTrigger, options: masterOptions }
 };
 const selected = { service: services[0].id, master: services[0].master, date: "", time: "" };
+let calendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 
 function loadBookings() {
   try {
@@ -42,6 +49,16 @@ function loadBookings() {
 }
 function saveBookings(items) {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(items)); return true; }
+  catch { return false; }
+}
+function loadReviews() {
+  try {
+    const data = JSON.parse(localStorage.getItem(REVIEWS_KEY) || "[]");
+    return Array.isArray(data) ? data.filter(item => item && item.bookingId && item.target && item.rating && item.text) : [];
+  } catch { return []; }
+}
+function saveReviews(items) {
+  try { localStorage.setItem(REVIEWS_KEY, JSON.stringify(items)); return true; }
   catch { return false; }
 }
 function normalizedPhone(value) {
@@ -80,12 +97,13 @@ function makeProfileAvatar() {
   avatar.setAttribute("aria-hidden", "true");
   const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   icon.setAttribute("viewBox", "0 0 24 24");
+  icon.setAttribute("fill", "currentColor");
   const head = document.createElementNS("http://www.w3.org/2000/svg", "circle");
   head.setAttribute("cx", "12");
-  head.setAttribute("cy", "8");
-  head.setAttribute("r", "3.25");
+  head.setAttribute("cy", "7.75");
+  head.setAttribute("r", "3.5");
   const shoulders = document.createElementNS("http://www.w3.org/2000/svg", "path");
-  shoulders.setAttribute("d", "M5.5 20c.5-3.6 2.7-5.5 6.5-5.5s6 1.9 6.5 5.5");
+  shoulders.setAttribute("d", "M4 20c.35-4.15 3.1-6.2 8-6.2s7.65 2.05 8 6.2H4Z");
   icon.append(head, shoulders);
   avatar.append(icon);
   return avatar;
@@ -120,10 +138,10 @@ function renderProfile() {
   profile.append(identity);
   profileContent.append(profile);
 
-  const today = dateKey(new Date());
+  const reviews = loadReviews();
   const ordered = bookings.sort((a, b) => {
-    const pastA = a.date < today;
-    const pastB = b.date < today;
+    const pastA = bookingHasPassed(a);
+    const pastB = bookingHasPassed(b);
     if (pastA !== pastB) return pastA ? 1 : -1;
     return pastA ? `${b.date} ${b.time}`.localeCompare(`${a.date} ${a.time}`) : `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`);
   });
@@ -136,7 +154,7 @@ function renderProfile() {
     const service = services.find(item => item.id === booking.service);
     const master = masters.find(item => item.id === booking.master);
     const bookingDate = new Date(`${booking.date}T12:00:00`);
-    const isPast = booking.date < today;
+    const isPast = bookingHasPassed(booking);
     const card = document.createElement("article");
     card.className = "profile-booking";
     card.append(makeProfileText("h3", "", service ? service.name : "Демо-услуга"));
@@ -146,6 +164,7 @@ function renderProfile() {
     dateTime.dateTime = `${booking.date}T${booking.time}`;
     dateTime.textContent = `${formatDate(bookingDate)} · ${booking.time}`;
     card.append(dateTime);
+    appendBookingReview(card, booking, master, isPast, reviews);
     profileContent.append(card);
   });
 
@@ -157,8 +176,52 @@ function renderProfile() {
   profileContent.append(newBooking);
   updateProfileButton();
 }
+function appendBookingReview(card, booking, master, isPast, reviews) {
+  const review = reviews.find(item => item.bookingId === booking.id);
+  const panel = document.createElement("div");
+  panel.className = "booking-review";
+
+  if (review) {
+    panel.classList.add("has-review");
+    const title = makeProfileText("strong", "", review.target === "master" ? `Отзыв о мастере ${master?.name || ""}` : "Отзыв о салоне");
+    const stars = makeProfileText("span", "review-stars", `${"★".repeat(Number(review.rating))}${"☆".repeat(5 - Number(review.rating))}`);
+    stars.setAttribute("aria-label", `Оценка: ${review.rating} из 5`);
+    panel.append(title, stars, makeProfileText("p", "", review.text));
+  } else if (isPast) {
+    const reveal = makeProfileText("button", "button button-small review-start", "Оставить отзыв");
+    reveal.type = "button";
+    const reviewForm = document.createElement("form");
+    reviewForm.className = "profile-review-form";
+    reviewForm.dataset.bookingId = booking.id;
+    reviewForm.hidden = true;
+    reviewForm.innerHTML = `
+      <label>Кому адресован отзыв
+        <select name="target"><option value="salon">Салону «Ягода»</option><option value="master">Мастеру ${master?.name || ""}</option></select>
+      </label>
+      <label>Оценка
+        <select name="rating" required><option value="5">5 · отлично</option><option value="4">4 · хорошо</option><option value="3">3 · нормально</option><option value="2">2 · плохо</option><option value="1">1 · очень плохо</option></select>
+      </label>
+      <label>Ваш отзыв
+        <textarea name="text" rows="3" maxlength="500" minlength="5" placeholder="Расскажите о впечатлениях от визита" required></textarea>
+      </label>
+      <button class="button button-small" type="submit">Сохранить отзыв</button>`;
+    reveal.addEventListener("click", () => {
+      reveal.hidden = true;
+      reviewForm.hidden = false;
+      reviewForm.querySelector("textarea").focus();
+    });
+    panel.append(reveal, reviewForm);
+  } else {
+    panel.append(makeProfileText("p", "review-after-visit", "Оставить отзыв можно после визита."));
+  }
+
+  card.append(panel);
+}
 function formatDate(date) {
   return new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long" }).format(date);
+}
+function bookingHasPassed(booking) {
+  return new Date(`${booking.date}T${booking.time}:00`).getTime() < Date.now();
 }
 function dateKey(date) {
   const y = date.getFullYear();
@@ -169,25 +232,45 @@ function dateKey(date) {
 function getDates() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
+  const firstDate = new Date(today);
+  firstDate.setDate(firstDate.getDate() + 1);
+  const lastDate = new Date(today);
+  const preferredDay = lastDate.getDate();
+  lastDate.setDate(1);
+  lastDate.setMonth(lastDate.getMonth() + 3);
+  lastDate.setDate(Math.min(preferredDay, new Date(lastDate.getFullYear(), lastDate.getMonth() + 1, 0).getDate()));
   const result = [];
-  for (let offset = 1; offset <= 21; offset += 1) {
-    const date = new Date(today);
-    date.setDate(today.getDate() + offset);
+  for (const date = new Date(firstDate); date <= lastDate; date.setDate(date.getDate() + 1)) {
     result.push(date);
   }
   return result;
+}
+function monthKey(date) { return `${date.getFullYear()}-${date.getMonth()}`; }
+function monthDateLabel(date) {
+  return new Intl.DateTimeFormat("ru-RU", { month: "long", year: "numeric" }).format(date);
 }
 function dayName(date) {
   return new Intl.DateTimeFormat("ru-RU", { weekday: "short" }).format(date).replace(".", "");
 }
 function currentService() { return services.find(item => item.id === selected.service); }
 function currentMaster() { return masters.find(item => item.id === selected.master); }
-function availableSlots(master, date, duration) {
+function demoBusySlots(master, date) {
+  if (!master.days.includes(date.getDay())) return [];
+  const dayNumber = Math.floor(date.getTime() / 86400000);
+  const masterIndex = masters.findIndex(item => item.id === master.id);
+  return master.slots.filter((time, index) => (dayNumber + masterIndex * 2 + index * 3) % 6 === 0);
+}
+function busySlots(master, date, bookings = loadBookings()) {
+  const actual = bookings
+    .filter(item => item.master === master.id && item.date === dateKey(date))
+    .map(item => item.time);
+  return [...new Set([...demoBusySlots(master, date), ...actual])];
+}
+function availableSlots(master, date, duration, bookings = loadBookings()) {
   const weekday = date.getDay();
   if (!master.days.includes(weekday)) return [];
-  const bookings = loadBookings();
-  // All demo starts are at least 150 minutes apart; duration is capped at 120 minutes.
-  return master.slots.filter(time => !bookings.some(item => item.master === master.id && item.date === dateKey(date) && item.time === time));
+  const busy = busySlots(master, date, bookings);
+  return master.slots.filter(time => !busy.includes(time));
 }
 function populateSelects() {
   serviceSelect.value = selected.service;
@@ -284,9 +367,8 @@ document.addEventListener("pointerdown", event => {
 });
 function renderServices() {
   const list = document.querySelector("#service-list");
-  list.innerHTML = services.map((item, index) => `
+  list.innerHTML = services.map(item => `
     <article class="service-row" role="listitem">
-      <span class="service-index">0${index + 1}</span>
       <div><h3 class="service-name">${item.name}</h3><p class="service-description">${item.description}</p></div>
       <span class="service-duration">${item.duration} минут</span>
       <span class="service-price">${item.price.toLocaleString("ru-RU")} ₽</span>
@@ -302,16 +384,45 @@ function renderServices() {
 function getAvailableDates() {
   const master = currentMaster();
   const service = currentService();
-  return getDates().filter(date => availableSlots(master, date, service.duration).length > 0);
+  const bookings = loadBookings();
+  return getDates().filter(date => availableSlots(master, date, service.duration, bookings).length > 0);
 }
 function renderDates() {
-  const dates = getAvailableDates();
-  if (!dates.some(date => dateKey(date) === selected.date)) selected.date = dates[0] ? dateKey(dates[0]) : "";
-  dateOptions.innerHTML = dates.slice(0, 5).map(date => {
+  const dates = getDates();
+  const availableDates = getAvailableDates();
+  const bookings = loadBookings();
+  if (!dates.some(date => dateKey(date) === selected.date && currentMaster().days.includes(date.getDay()))) {
+    selected.date = availableDates[0] ? dateKey(availableDates[0]) : "";
+  }
+  const firstDate = dates[0] || new Date();
+  const lastDate = dates[dates.length - 1] || firstDate;
+  const minMonth = new Date(firstDate.getFullYear(), firstDate.getMonth(), 1);
+  const maxMonth = new Date(lastDate.getFullYear(), lastDate.getMonth(), 1);
+  if (calendarMonth < minMonth) calendarMonth = minMonth;
+  if (calendarMonth > maxMonth) calendarMonth = maxMonth;
+  calendarTitle.textContent = monthDateLabel(calendarMonth);
+  calendarPrev.disabled = monthKey(calendarMonth) === monthKey(minMonth);
+  calendarNext.disabled = monthKey(calendarMonth) === monthKey(maxMonth);
+
+  const firstWeekday = (new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), 1).getDay() + 6) % 7;
+  const daysInMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 0).getDate();
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const cells = [...Array(firstWeekday).fill('<span class="calendar-blank" aria-hidden="true"></span>')];
+  for (let day = 1; day <= daysInMonth; day += 1) {
+    const date = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), day);
     const key = dateKey(date);
-    const active = key === selected.date;
-    return `<button class="date-option" type="button" data-date="${key}" aria-pressed="${active}" aria-label="${formatDate(date)}, ${dayName(date)}"><span>${date.getDate()}</span><span>${dayName(date)}</span></button>`;
-  }).join("");
+    const isInRange = dates.some(item => dateKey(item) === key);
+    const busy = busySlots(currentMaster(), date, bookings);
+    const free = availableSlots(currentMaster(), date, currentService().duration, bookings);
+    const canSelect = isInRange && currentMaster().days.includes(date.getDay()) && date > today;
+    const selectedDay = key === selected.date;
+    const status = free.length ? `${free.length} мест` : busy.length ? "занято" : "—";
+    const spokenDate = new Intl.DateTimeFormat("ru-RU", { weekday: "long", day: "numeric", month: "long" }).format(date);
+    const accessibleStatus = `${spokenDate}, ${free.length ? `${free.length} свободных слота` : "нет свободных слотов"}${busy.length ? `, ${busy.length} занято` : ""}`;
+    cells.push(`<button class="date-option${free.length ? " has-free" : ""}${busy.length ? " has-busy" : ""}" type="button" data-date="${key}" aria-pressed="${selectedDay}" aria-label="${accessibleStatus}" title="${accessibleStatus}" ${canSelect ? "" : "disabled"}><span class="calendar-day-number">${day}</span><span class="calendar-day-status">${status}</span></button>`);
+  }
+  dateOptions.innerHTML = cells.join("");
   dateOptions.querySelectorAll("button").forEach(button => button.addEventListener("click", () => {
     clearFormError();
     selected.date = button.dataset.date;
@@ -321,12 +432,28 @@ function renderDates() {
     updateSummary();
   }));
 }
+calendarPrev.addEventListener("click", () => {
+  calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1, 1);
+  renderDates();
+});
+calendarNext.addEventListener("click", () => {
+  calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 1);
+  renderDates();
+});
 function renderSlots() {
   const date = getDates().find(item => dateKey(item) === selected.date);
-  const slots = date ? availableSlots(currentMaster(), date, currentService().duration) : [];
-  if (!slots.includes(selected.time)) selected.time = slots[0] || "";
-  slotOptions.innerHTML = slots.map(time => `<button class="slot-option" type="button" data-time="${time}" aria-pressed="${selected.time === time}">${time}</button>`).join("");
-  emptySlots.hidden = slots.length > 0;
+  const master = currentMaster();
+  const bookings = loadBookings();
+  const scheduledSlots = date && master.days.includes(date.getDay()) ? master.slots : [];
+  const freeSlots = date ? availableSlots(master, date, currentService().duration, bookings) : [];
+  const occupiedSlots = date ? busySlots(master, date, bookings) : [];
+  if (!freeSlots.includes(selected.time)) selected.time = freeSlots[0] || "";
+  slotOptions.innerHTML = scheduledSlots.map(time => {
+    const isBusy = occupiedSlots.includes(time);
+    const label = isBusy ? `${time}, занято в демо-расписании` : `${time}, свободно`;
+    return `<button class="slot-option${isBusy ? " is-busy" : ""}" type="button" data-time="${time}" aria-label="${label}" aria-pressed="${!isBusy && selected.time === time}" ${isBusy ? "disabled" : ""}><span>${time}</span>${isBusy ? "<small>Занято</small>" : ""}</button>`;
+  }).join("");
+  emptySlots.hidden = freeSlots.length > 0;
   slotOptions.querySelectorAll("button").forEach(button => button.addEventListener("click", () => {
     clearFormError();
     selected.time = button.dataset.time;
@@ -443,12 +570,13 @@ form.addEventListener("submit", event => {
   if (!digits.startsWith("7") || digits.length !== 11) return showError("Проверьте номер: нужен российский номер из 11 цифр, начиная с +7.");
   if (!document.querySelector("#consent").checked) return showError("Подтвердите, что понимаете условия демо-записи.");
   const bookings = loadBookings();
-  const conflict = bookings.some(item => item.master === selected.master && item.date === selected.date && item.time === selected.time);
+  const chosenDate = getDates().find(item => dateKey(item) === selected.date);
+  const conflict = !chosenDate || !availableSlots(currentMaster(), chosenDate, currentService().duration).includes(selected.time);
   if (conflict) {
     selected.time = "";
     renderSlots();
     updateSummary();
-    return showError("Этот слот уже занят в локальных демо-данных. Выберите другое время.");
+    return showError("Этот слот уже занят в демо-расписании. Выберите другое время.");
   }
   const service = currentService();
   const master = currentMaster();
@@ -511,6 +639,59 @@ function closeProfile() {
   if (profileDialog.open) profileDialog.close();
   profileToggle.setAttribute("aria-expanded", "false");
 }
+function renderMasterDetails(master) {
+  document.querySelector("#master-dialog-title").textContent = master.name;
+  masterDetailBody.replaceChildren();
+  const intro = document.createElement("section");
+  intro.className = "master-detail-intro";
+  const avatar = document.createElement("span");
+  avatar.className = `master-detail-avatar portrait-${masters.indexOf(master) + 1}`;
+  avatar.textContent = master.name.charAt(0);
+  const copy = document.createElement("div");
+  copy.append(makeProfileText("strong", "master-detail-specialty", master.specialty));
+  copy.append(makeProfileText("span", "master-detail-experience", `Опыт работы · ${master.experience}`));
+  intro.append(avatar, copy);
+  masterDetailBody.append(intro, makeProfileText("p", "master-detail-bio", master.bio));
+
+  const worksHeading = document.createElement("div");
+  worksHeading.className = "master-works-heading";
+  worksHeading.append(makeProfileText("h3", "", "Примеры работ"));
+  worksHeading.append(makeProfileText("span", "", "графические демо-иллюстрации"));
+  masterDetailBody.append(worksHeading);
+  const works = document.createElement("div");
+  works.className = "master-works-grid";
+  master.works.forEach(work => {
+    const item = document.createElement("article");
+    item.className = "master-work";
+    const art = document.createElement("div");
+    art.className = `nail-art ${work.style}`;
+    art.setAttribute("aria-hidden", "true");
+    for (let index = 0; index < 4; index += 1) art.append(document.createElement("span"));
+    item.append(art, makeProfileText("p", "", work.title));
+    works.append(item);
+  });
+  masterDetailBody.append(works);
+  const bookingLink = document.createElement("a");
+  bookingLink.className = "button button-small master-book-link";
+  bookingLink.href = "#booking";
+  bookingLink.textContent = "Выбрать мастера";
+  bookingLink.addEventListener("click", () => {
+    masterDialog.close();
+    masterSelect.value = master.id;
+    masterSelect.dispatchEvent(new Event("change", { bubbles: true }));
+  });
+  masterDetailBody.append(bookingLink);
+}
+document.querySelectorAll("[data-master]").forEach(button => button.addEventListener("click", () => {
+  const master = masters.find(item => item.id === button.dataset.master);
+  if (!master) return;
+  renderMasterDetails(master);
+  masterDialog.showModal();
+}));
+document.querySelector("#master-close").addEventListener("click", () => masterDialog.close());
+masterDialog.addEventListener("click", event => {
+  if (event.target === masterDialog) masterDialog.close();
+});
 document.querySelector("#profile-close").addEventListener("click", closeProfile);
 profileDialog.addEventListener("close", () => profileToggle.setAttribute("aria-expanded", "false"));
 profileDialog.addEventListener("click", event => {
@@ -541,8 +722,37 @@ document.querySelector("#profile-lookup").addEventListener("submit", event => {
   renderProfile();
 });
 profilePhoneInput.addEventListener("input", () => { profileError.hidden = true; });
+profileContent.addEventListener("submit", event => {
+  const reviewForm = event.target.closest(".profile-review-form");
+  if (!reviewForm) return;
+  event.preventDefault();
+  const booking = loadBookings().find(item => item.id === reviewForm.dataset.bookingId);
+  if (!booking || !bookingHasPassed(booking)) return;
+  const textField = reviewForm.querySelector('[name="text"]');
+  const text = textField.value.trim();
+  if (text.length < 5) {
+    textField.setCustomValidity("Напишите хотя бы несколько слов.");
+    reviewForm.reportValidity();
+    textField.addEventListener("input", () => textField.setCustomValidity(""), { once: true });
+    return;
+  }
+  const review = {
+    bookingId: booking.id,
+    target: reviewForm.elements.target.value,
+    rating: Number(reviewForm.elements.rating.value),
+    text,
+    master: booking.master,
+    createdAt: new Date().toISOString()
+  };
+  if (!saveReviews([...loadReviews(), review])) {
+    const error = makeProfileText("p", "profile-error", "Не удалось сохранить отзыв в этом браузере.");
+    reviewForm.append(error);
+    return;
+  }
+  renderProfile();
+});
 window.addEventListener("storage", event => {
-  if (!event.key || event.key === STORAGE_KEY || event.key === PROFILE_KEY) {
+  if (!event.key || event.key === STORAGE_KEY || event.key === PROFILE_KEY || event.key === REVIEWS_KEY) {
     currentProfile = loadProfile();
     updateProfileButton();
     if (profileDialog.open) renderProfile();
