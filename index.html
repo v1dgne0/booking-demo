@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f0e8">
+  <meta name="description" content="Ягода — демонстрационный сайт камерной студии маникюра с онлайн-записью.">
+  <title>Ягода — студия маникюра</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Перейти к содержимому</a>
+  <div class="demo-ribbon" role="note">Портфолио-проект · все данные на сайте условные</div>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Ягода — на главную">
+      <span class="brand-mark" aria-hidden="true">я</span>
+      <span class="brand-name">ягода<span>маникюрная</span></span>
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Открыть меню"><span></span><span></span></button>
+    <nav class="main-nav" id="main-nav" aria-label="Главная навигация">
+      <a href="#services">Услуги</a><a href="#team">Мастера</a><a href="#works">Работы</a><a href="#contacts">Контакты</a>
+      <a class="button button-small" href="#booking">Записаться <span aria-hidden="true">↗</span></a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero section-wrap" id="top" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="eyebrow-line"></span>Рязанская область · студия-демо</p>
+        <h1 id="hero-title">Красота —<br>в <em>деталях.</em></h1>
+        <p class="hero-description">Маникюр, в котором всё на своём месте: мягкая форма, точный цвет и время только для себя.</p>
+        <div class="hero-actions"><a class="button" href="#booking">Выбрать время <span aria-hidden="true">↗</span></a><a class="text-link" href="#services">Смотреть услуги <span aria-hidden="true">↓</span></a></div>
+        <div class="hero-footnote"><span class="tiny-dot"></span> Онлайн-запись — демонстрационный сценарий</div>
+      </div>
+      <div class="hero-art">
+        <img class="hero-image" src="assets/hero.png" alt="Демо-иллюстрация маникюра с ягодным покрытием на светлом камне">
+        <div class="art-caption art-caption-top">slow beauty<br><span>№ 01 / 2026</span></div>
+        <div class="art-caption art-caption-bottom">цвет сезона<br><span>«тёплая вишня»</span></div>
+        <div class="art-number">07</div>
+      </div>
+      <div class="hero-bottom-note"><span>01</span> Спокойный ритуал<br>и аккуратный результат</div>
+    </section>
+
+    <section class="intro-band" aria-label="О студии"><p>Небольшая студия — <span>бережный подход</span> к деталям. Демо-проект с условными услугами, ценами и расписанием.</p><span class="band-flower" aria-hidden="true">✳</span></section>
+
+    <section class="section-wrap content-section" id="services" aria-labelledby="services-title">
+      <div class="section-heading"><div><p class="eyebrow">01 / меню</p><h2 id="services-title">Уход без <em>спешки</em></h2></div><p>Прозрачное меню: время и стоимость указаны для примера и не являются реальным прайсом.</p></div>
+      <div class="service-list" id="service-list" role="list" aria-label="Условные услуги"></div>
+    </section>
+
+    <section class="team-section" id="team" aria-labelledby="team-title">
+      <div class="section-wrap content-section">
+        <div class="section-heading"><div><p class="eyebrow">02 / команда</p><h2 id="team-title">Свои <em>люди</em></h2></div><p>Учебные профили мастеров. В форме записи можно выбрать любого специалиста.</p></div>
+        <div class="team-grid">
+          <article class="master-card"><div class="master-portrait portrait-one"><span>А</span><i aria-hidden="true">✳</i></div><div class="master-meta"><div><h3>Алина</h3><p>Мягкий маникюр · однотон</p></div><span class="master-index">01</span></div></article>
+          <article class="master-card"><div class="master-portrait portrait-two"><span>М</span><i aria-hidden="true">◌</i></div><div class="master-meta"><div><h3>Мира</h3><p>Форма · лаконичный дизайн</p></div><span class="master-index">02</span></div></article>
+          <article class="master-card"><div class="master-portrait portrait-three"><span>Н</span><i aria-hidden="true">✳</i></div><div class="master-meta"><div><h3>Ника</h3><p>Укрепление · тонкие детали</p></div><span class="master-index">03</span></div></article>
+        </div>
+        <p class="demo-caption"><span class="tiny-dot"></span> Имена и специализации — условные примеры</p>
+      </div>
+    </section>
+
+    <section class="section-wrap content-section works-section" id="works" aria-labelledby="works-title">
+      <div class="section-heading"><div><p class="eyebrow">03 / вдохновение</p><h2 id="works-title">Цвет и <em>форма</em></h2></div><p>Иллюстрации вместо фотографий реальных работ студии.</p></div>
+      <div class="work-grid">
+        <article class="work-card work-one"><div class="nail-art nail-red" aria-hidden="true"><span></span><span></span><span></span><span></span></div><p>01 <span>ягодный глянец</span></p></article>
+        <article class="work-card work-two"><div class="nail-art nail-nude" aria-hidden="true"><span></span><span></span><span></span><span></span></div><p>02 <span>тихий нюд</span></p></article>
+        <article class="work-card work-three"><div class="nail-art nail-olive" aria-hidden="true"><span></span><span></span><span></span><span></span></div><p>03 <span>оливковая линия</span></p></article>
+      </div>
+      <p class="demo-caption"><span class="tiny-dot"></span> Все примеры — графические иллюстрации для демо-проекта</p>
+    </section>
+
+    <section class="booking-section" id="booking" aria-labelledby="booking-title">
+      <div class="section-wrap booking-wrap">
+        <div class="booking-intro"><p class="eyebrow">04 / ваша запись</p><h2 id="booking-title">Выберите<br><em>своё время</em></h2><p>Последовательно выберите услугу, мастера и свободный слот. Контакты никуда не отправляются.</p><div class="booking-aside"><span class="aside-mark">я</span><span>Демо-расписание<br>сохраняется только в этом браузере</span></div></div>
+        <div class="booking-card">
+          <div class="booking-progress" aria-label="Шаг 1 из 3"><span class="progress-step is-active" data-progress="1">01 <i>Услуга</i></span><span class="progress-rule"></span><span class="progress-step" data-progress="2">02 <i>Время</i></span><span class="progress-rule"></span><span class="progress-step" data-progress="3">03 <i>Контакт</i></span></div>
+          <form id="booking-form" novalidate>
+            <section class="booking-step" id="step-service" aria-labelledby="step-service-title">
+              <div class="step-heading"><span class="step-count">01</span><div><h3 id="step-service-title">Что будем делать?</h3><p>Цены и длительность — условные.</p></div></div>
+              <label class="field-label" for="service-select">Услуга</label><select id="service-select" name="service" required></select>
+              <label class="field-label" for="master-select">Мастер <span id="recommendation-label" class="recommendation-label">Рекомендуем</span></label><select id="master-select" name="master" required></select>
+            </section>
+            <section class="booking-step" id="step-time" aria-labelledby="step-time-title">
+              <div class="step-heading"><span class="step-count">02</span><div><h3 id="step-time-title">Когда вам удобно?</h3><p>Демо-слоты обновляются при смене услуги или мастера.</p></div></div>
+              <div class="field-label date-label">Дата <span class="timezone-note">время местное</span></div><div id="date-options" class="date-options" role="group" aria-label="Доступные даты"></div>
+              <div class="field-label slot-label">Свободное время</div><div id="slot-options" class="slot-options" role="group" aria-label="Доступное время"></div><p id="slots-empty" class="empty-slots" role="status" aria-live="polite" hidden>На эту дату мест нет. Выберите другой день.</p>
+            </section>
+            <section class="booking-step" id="step-contact" aria-labelledby="step-contact-title">
+              <div class="step-heading"><span class="step-count">03</span><div><h3 id="step-contact-title">Как к вам обращаться?</h3><p>Данные останутся в вашем браузере.</p></div></div>
+              <div class="contact-fields"><div><label class="field-label" for="client-name">Ваше имя</label><input id="client-name" name="name" autocomplete="given-name" maxlength="60" placeholder="Например, Анна" required></div><div><label class="field-label" for="client-phone">Телефон</label><input id="client-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required aria-describedby="phone-hint"><small id="phone-hint">Российский номер, начиная с +7</small></div></div>
+              <div class="booking-summary" id="booking-summary" aria-live="polite"><div class="summary-title">Ваша запись <span>демо</span></div><dl><div><dt>Услуга</dt><dd id="summary-service">—</dd></div><div><dt>Мастер</dt><dd id="summary-master">—</dd></div><div><dt>Дата и время</dt><dd id="summary-datetime">—</dd></div><div class="summary-price"><dt>Стоимость</dt><dd id="summary-price">—</dd></div></dl></div>
+              <label class="consent-label"><input id="consent" type="checkbox" required><span>Понимаю, что это демонстрационная запись и студия не получит заявку.</span></label>
+              <p class="form-error" id="form-error" role="alert" tabindex="-1" hidden></p>
+              <button class="button submit-button" type="submit">Сохранить демо-запись <span aria-hidden="true">↗</span></button>
+            </section>
+          </form>
+          <div class="booking-success" id="booking-success" role="status" tabindex="-1" hidden><span class="success-icon" aria-hidden="true">✓</span><p class="eyebrow">Готово · демо</p><h3>Время за вами.</h3><p>Демо-запись сохранена в этом браузере. Студия не получила заявку.</p><div id="success-summary" class="success-summary"></div><button class="button button-outline" id="restart-booking" type="button">Начать заново <span aria-hidden="true">↻</span></button></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-wrap content-section contacts-section" id="contacts" aria-labelledby="contacts-title">
+      <div><p class="eyebrow">05 / на связи</p><h2 id="contacts-title">До встречи<br><em>в студии</em></h2><p class="contact-demo-note">Контактные сведения ниже — вымышленные и служат только примером.</p></div>
+      <div class="contact-details"><div><span>Адрес · демо</span><p>Рязанская область<br>условный адрес, дом 12</p></div><div><span>Часы · демо</span><p>Ежедневно<br>10:00–20:00</p></div><div><span>Телефон · демо</span><p><a href="tel:+70000000000">+7 (000) 000-00-00</a></p></div></div>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="section-wrap footer-inner"><a class="brand footer-brand" href="#top"><span class="brand-mark" aria-hidden="true">я</span><span class="brand-name">ягода<span>маникюрная</span></span></a><p>Портфолио-проект · данные условные</p><a href="#booking">К онлайн-записи ↑</a><span class="footer-year">© 2026</span></div></footer>
+</body>
+</html>
