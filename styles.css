@@ -2353,6 +2353,7 @@ body {
 
 .booking-card.is-resizing {
   overflow: hidden;
+  overflow-anchor: none;
   transition: height 560ms cubic-bezier(.2, 0, 0, 1);
 }
 
@@ -2364,6 +2365,311 @@ body {
   opacity: 0;
   transform: translateY(16px) scale(.99);
   filter: blur(4px);
+}
+
+/* Custom service and master pickers */
+.picker-field {
+  position: relative;
+  z-index: 1;
+  margin: 15px 0 20px;
+}
+
+.picker-field.is-open {
+  z-index: 6;
+}
+
+.picker-field-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.picker-field .field-label {
+  display: block;
+  margin: 0 0 8px;
+}
+
+.picker-trigger {
+  display: grid;
+  width: 100%;
+  min-height: 72px;
+  grid-template-columns: 42px minmax(0, 1fr) 20px;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 15px;
+  border: 1px solid #e6d9ce;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #fffdf9, #faf5ef);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 220ms ease, background-color 220ms ease, box-shadow 220ms ease, transform 220ms ease;
+}
+
+.picker-trigger:hover,
+.picker-field.is-open .picker-trigger {
+  border-color: #cba9a0;
+  background: #fffdfa;
+  box-shadow: 0 8px 22px rgba(75, 45, 44, .07);
+}
+
+.picker-trigger:active {
+  transform: scale(.995);
+}
+
+.picker-trigger:focus-visible,
+.picker-option:focus-visible {
+  outline: 2px solid var(--berry);
+  outline-offset: 3px;
+}
+
+.picker-mark,
+.picker-option-avatar {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  place-items: center;
+  border: 1px solid #ead7ce;
+  border-radius: 50%;
+  background: #f6ece5;
+  color: var(--berry);
+}
+
+.picker-mark-service {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .06em;
+}
+
+.picker-mark-master,
+.picker-option-avatar {
+  font-family: var(--serif);
+  font-size: 18px;
+}
+
+.picker-copy {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.picker-copy strong,
+.picker-copy small,
+.picker-meta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.picker-value {
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.picker-meta {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.picker-chevron {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: var(--muted);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+  transition: transform 240ms cubic-bezier(.2, 0, 0, 1), color 220ms ease;
+}
+
+.picker-field.is-open .picker-chevron {
+  transform: rotate(180deg);
+  color: var(--berry);
+}
+
+.picker-options[hidden] {
+  display: none;
+}
+
+.picker-options {
+  position: absolute;
+  z-index: 2;
+  top: calc(100% + 7px);
+  right: 0;
+  left: 0;
+  display: grid;
+  max-height: min(300px, 45vh);
+  gap: 5px;
+  overflow: auto;
+  padding: 7px;
+  border: 1px solid #e8ddd4;
+  border-radius: 15px;
+  background: #fffdfa;
+  box-shadow: 0 18px 38px rgba(48, 35, 34, .13);
+  opacity: 0;
+  transform: translateY(-7px) scale(.99);
+  transform-origin: top center;
+  pointer-events: none;
+  transition: opacity 210ms ease, transform 240ms cubic-bezier(.2, 0, 0, 1);
+  overscroll-behavior: contain;
+}
+
+.picker-options.is-open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.picker-option {
+  display: grid;
+  width: 100%;
+  min-height: 60px;
+  grid-template-columns: minmax(0, 1fr) auto 22px;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 11px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.picker-option:hover {
+  background: #faf4ee;
+}
+
+.picker-option:active {
+  transform: scale(.99);
+}
+
+.picker-option.is-selected {
+  border-color: #ead8cf;
+  background: #f8f0e9;
+}
+
+.picker-option-copy {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.picker-option-copy strong {
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.picker-option-copy small,
+.picker-option-meta small {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.picker-option-meta {
+  display: grid;
+  justify-items: end;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+.picker-option-meta strong {
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.picker-option-master {
+  grid-template-columns: 38px minmax(0, 1fr) 22px;
+}
+
+.picker-option-master .picker-option-avatar {
+  width: 36px;
+  height: 36px;
+  font-size: 16px;
+}
+
+.picker-check {
+  display: grid;
+  width: 20px;
+  height: 20px;
+  place-items: center;
+  border: 1px solid #d9c7bc;
+  border-radius: 50%;
+  color: var(--berry);
+  opacity: 0;
+  transform: scale(.75);
+  transition: opacity 180ms ease, transform 220ms cubic-bezier(.2, 0, 0, 1);
+}
+
+.picker-check svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.picker-option.is-selected .picker-check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.profile-close svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 1.8;
+}
+
+.profile-avatar svg {
+  width: 21px;
+  height: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.6;
+}
+
+@media (max-width: 640px) {
+  .picker-field {
+    margin: 13px 0 17px;
+  }
+
+  .picker-trigger {
+    min-height: 66px;
+    grid-template-columns: 38px minmax(0, 1fr) 18px;
+    gap: 10px;
+    padding: 10px 12px;
+  }
+
+  .picker-mark {
+    width: 36px;
+    height: 36px;
+  }
+
+  .picker-value {
+    font-size: 13px;
+  }
+
+  .picker-meta {
+    font-size: 11px;
+  }
+
+  .picker-option {
+    gap: 7px;
+    padding-inline: 8px;
+  }
 }
 
 @keyframes profile-enter {
@@ -2559,7 +2865,12 @@ body {
   }
 
   .booking-card.is-resizing,
-  .booking-success {
+  .booking-success,
+  .picker-trigger,
+  .picker-chevron,
+  .picker-options,
+  .picker-option,
+  .picker-check {
     transition: none;
   }
 
@@ -2567,5 +2878,15 @@ body {
     opacity: 1;
     transform: none;
     filter: none;
+  }
+
+  .picker-options,
+  .picker-options.is-open {
+    opacity: 1;
+    transform: none;
+  }
+
+  .picker-check {
+    transform: none;
   }
 }

@@ -7,9 +7,9 @@ const services = [
   { id: "removal", name: "Снятие + маникюр", description: "Снятие покрытия и чистый маникюр", duration: 90, price: 1900, master: "alina" }
 ];
 const masters = [
-  { id: "alina", name: "Алина", days: [1, 2, 3, 4, 5, 6], slots: ["10:00", "12:30", "15:00", "17:30"] },
-  { id: "mira", name: "Мира", days: [1, 2, 3, 4, 5], slots: ["11:00", "13:30", "16:00", "18:00"] },
-  { id: "nika", name: "Ника", days: [2, 3, 4, 5, 6], slots: ["10:30", "13:00", "15:30", "18:00"] }
+  { id: "alina", name: "Алина", specialty: "Мягкий маникюр · однотон", days: [1, 2, 3, 4, 5, 6], slots: ["10:00", "12:30", "15:00", "17:30"] },
+  { id: "mira", name: "Мира", specialty: "Форма · лаконичный дизайн", days: [1, 2, 3, 4, 5], slots: ["11:00", "13:30", "16:00", "18:00"] },
+  { id: "nika", name: "Ника", specialty: "Укрепление · тонкие детали", days: [2, 3, 4, 5, 6], slots: ["10:30", "13:00", "15:30", "18:00"] }
 ];
 const STORAGE_KEY = "yagoda-demo-bookings-v1";
 const PROFILE_KEY = "yagoda-demo-profile-v1";
@@ -24,6 +24,14 @@ const profileDialog = document.querySelector("#profile-dialog");
 const profileContent = document.querySelector("#profile-content");
 const profilePhoneInput = document.querySelector("#profile-phone");
 const profileError = document.querySelector("#profile-error");
+const serviceTrigger = document.querySelector("#service-trigger");
+const masterTrigger = document.querySelector("#master-trigger");
+const serviceOptions = document.querySelector("#service-options");
+const masterOptions = document.querySelector("#master-options");
+const pickerConfig = {
+  service: { field: document.querySelector("#service-picker"), input: serviceSelect, trigger: serviceTrigger, options: serviceOptions },
+  master: { field: document.querySelector("#master-picker"), input: masterSelect, trigger: masterTrigger, options: masterOptions }
+};
 const selected = { service: services[0].id, master: services[0].master, date: "", time: "" };
 
 function loadBookings() {
@@ -66,6 +74,22 @@ function makeProfileText(tag, className, value) {
   element.textContent = value;
   return element;
 }
+function makeProfileAvatar() {
+  const avatar = document.createElement("span");
+  avatar.className = "profile-avatar";
+  avatar.setAttribute("aria-hidden", "true");
+  const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  icon.setAttribute("viewBox", "0 0 24 24");
+  const head = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  head.setAttribute("cx", "12");
+  head.setAttribute("cy", "8");
+  head.setAttribute("r", "3.25");
+  const shoulders = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  shoulders.setAttribute("d", "M5.5 20c.5-3.6 2.7-5.5 6.5-5.5s6 1.9 6.5 5.5");
+  icon.append(head, shoulders);
+  avatar.append(icon);
+  return avatar;
+}
 function updateProfileButton() {
   const count = document.querySelector("#profile-count");
   const phone = currentProfile ? normalizedPhone(currentProfile.phone) : "";
@@ -89,8 +113,7 @@ function renderProfile() {
 
   const profile = document.createElement("div");
   profile.className = "profile-person";
-  const initial = (currentProfile?.name || "Я").trim().charAt(0).toLocaleUpperCase("ru-RU") || "Я";
-  profile.append(makeProfileText("span", "profile-avatar", initial));
+  profile.append(makeProfileAvatar());
   const identity = document.createElement("div");
   identity.append(makeProfileText("strong", "", currentProfile?.name || "Ваш профиль"));
   identity.append(makeProfileText("span", "", "Личные записи в этом браузере"));
@@ -167,11 +190,98 @@ function availableSlots(master, date, duration) {
   return master.slots.filter(time => !bookings.some(item => item.master === master.id && item.date === dateKey(date) && item.time === time));
 }
 function populateSelects() {
-  serviceSelect.innerHTML = services.map(item => `<option value="${item.id}">${item.name} · ${item.price.toLocaleString("ru-RU")} ₽ · ${item.duration} мин</option>`).join("");
-  masterSelect.innerHTML = masters.map(item => `<option value="${item.id}">${item.name}</option>`).join("");
   serviceSelect.value = selected.service;
   masterSelect.value = selected.master;
+  renderPickers();
 }
+function renderPickers() {
+  const service = currentService();
+  const master = currentMaster();
+  document.querySelector("#service-value").textContent = service.name;
+  document.querySelector("#service-meta").textContent = `${service.price.toLocaleString("ru-RU")} ₽ · ${service.duration} минут`;
+  document.querySelector("#master-value").textContent = master.name;
+  document.querySelector("#master-meta").textContent = master.specialty;
+  document.querySelector("#master-avatar").textContent = master.name.charAt(0);
+
+  serviceOptions.innerHTML = services.map((item, index) => `
+    <button class="picker-option picker-option-service${item.id === service.id ? " is-selected" : ""}" type="button" role="option" aria-selected="${item.id === service.id}" data-service-option="${item.id}">
+      <span class="picker-option-copy"><strong>${item.name}</strong><small>${item.description}</small></span>
+      <span class="picker-option-meta"><strong>${item.price.toLocaleString("ru-RU")} ₽</strong><small>${item.duration} мин</small></span>
+      <span class="picker-check" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="m4 10 4 4 8-8"></path></svg></span>
+    </button>`).join("");
+  masterOptions.innerHTML = masters.map(item => `
+    <button class="picker-option picker-option-master${item.id === master.id ? " is-selected" : ""}" type="button" role="option" aria-selected="${item.id === master.id}" data-master-option="${item.id}">
+      <span class="picker-option-avatar" aria-hidden="true">${item.name.charAt(0)}</span>
+      <span class="picker-option-copy"><strong>${item.name}</strong><small>${item.specialty}</small></span>
+      <span class="picker-check" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="m4 10 4 4 8-8"></path></svg></span>
+    </button>`).join("");
+
+  serviceOptions.querySelectorAll("[data-service-option]").forEach(option => option.addEventListener("click", () => {
+    serviceSelect.value = option.dataset.serviceOption;
+    serviceSelect.dispatchEvent(new Event("change", { bubbles: true }));
+    closePicker("service", true);
+  }));
+  masterOptions.querySelectorAll("[data-master-option]").forEach(option => option.addEventListener("click", () => {
+    masterSelect.value = option.dataset.masterOption;
+    masterSelect.dispatchEvent(new Event("change", { bubbles: true }));
+    closePicker("master", true);
+  }));
+}
+function closePicker(type, returnFocus = false) {
+  const picker = pickerConfig[type];
+  picker.trigger.setAttribute("aria-expanded", "false");
+  picker.field.classList.remove("is-open");
+  picker.options.classList.remove("is-open");
+  window.setTimeout(() => {
+    if (!picker.options.classList.contains("is-open")) picker.options.hidden = true;
+  }, 220);
+  if (returnFocus) picker.trigger.focus({ preventScroll: true });
+}
+function openPicker(type, focusSelected = false) {
+  const picker = pickerConfig[type];
+  Object.keys(pickerConfig).forEach(other => {
+    if (other !== type && pickerConfig[other].trigger.getAttribute("aria-expanded") === "true") closePicker(other);
+  });
+  if (picker.trigger.getAttribute("aria-expanded") === "true") return;
+  picker.trigger.setAttribute("aria-expanded", "true");
+  picker.field.classList.add("is-open");
+  picker.options.hidden = false;
+  window.requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => {
+      picker.options.classList.add("is-open");
+      if (focusSelected) picker.options.querySelector('[aria-selected="true"]')?.focus();
+    });
+  });
+}
+Object.entries(pickerConfig).forEach(([type, picker]) => {
+  picker.trigger.addEventListener("click", () => {
+    if (picker.trigger.getAttribute("aria-expanded") === "true") closePicker(type);
+    else openPicker(type, false);
+  });
+  picker.trigger.addEventListener("keydown", event => {
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      openPicker(type, true);
+    }
+  });
+  picker.options.addEventListener("keydown", event => {
+    const options = [...picker.options.querySelectorAll('[role="option"]')];
+    const index = options.indexOf(document.activeElement);
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closePicker(type, true);
+    } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      const direction = event.key === "ArrowDown" ? 1 : -1;
+      options[(index + direction + options.length) % options.length]?.focus();
+    }
+  });
+});
+document.addEventListener("pointerdown", event => {
+  Object.entries(pickerConfig).forEach(([type, picker]) => {
+    if (picker.trigger.getAttribute("aria-expanded") === "true" && !picker.field.contains(event.target)) closePicker(type);
+  });
+});
 function renderServices() {
   const list = document.querySelector("#service-list");
   list.innerHTML = services.map((item, index) => `
@@ -186,7 +296,7 @@ function renderServices() {
     serviceSelect.value = button.dataset.service;
     serviceSelect.dispatchEvent(new Event("change", { bubbles: true }));
     document.querySelector("#booking").scrollIntoView({ behavior: "smooth", block: "start" });
-    serviceSelect.focus({ preventScroll: true });
+    serviceTrigger.focus({ preventScroll: true });
   }));
 }
 function getAvailableDates() {
@@ -253,10 +363,12 @@ serviceSelect.addEventListener("change", () => {
   selected.service = serviceSelect.value;
   selected.master = currentService().master;
   masterSelect.value = selected.master;
+  renderPickers();
   resetTime();
 });
 masterSelect.addEventListener("change", () => {
   selected.master = masterSelect.value;
+  renderPickers();
   resetTime();
 });
 
@@ -282,13 +394,18 @@ function showError(message) {
 }
 function showBookingSuccess() {
   const card = success.closest(".booking-card");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const startHeight = card.getBoundingClientRect().height;
+  const cardTop = card.getBoundingClientRect().top;
+  if (cardTop < 12 || cardTop > 120) {
+    card.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+  }
   form.hidden = true;
   success.hidden = false;
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    success.focus();
+  if (reduceMotion) {
+    success.focus({ preventScroll: true });
     return;
   }
-  const startHeight = card.getBoundingClientRect().height;
   success.classList.add("is-entering");
   card.style.height = `${startHeight}px`;
   card.classList.add("is-resizing");
@@ -300,7 +417,7 @@ function showBookingSuccess() {
     clearTimeout(fallback);
     card.style.height = "";
     card.classList.remove("is-resizing");
-    success.focus();
+    success.focus({ preventScroll: true });
   };
   const onTransitionEnd = event => {
     if (event.target === card && event.propertyName === "height") {
@@ -359,7 +476,7 @@ document.querySelector("#restart-booking").addEventListener("click", () => {
   updateSummary();
   document.querySelector("#form-error").hidden = true;
   document.querySelector("#booking-title").scrollIntoView({ behavior: "smooth", block: "start" });
-  serviceSelect.focus({ preventScroll: true });
+  serviceTrigger.focus({ preventScroll: true });
 });
 form.addEventListener("input", clearFormError);
 form.addEventListener("change", clearFormError);

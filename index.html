@@ -37,7 +37,7 @@
     <dialog class="profile-dialog" id="profile-dialog" aria-labelledby="profile-title">
       <div class="profile-dialog-heading">
         <div><p class="eyebrow">Клиентский профиль · демо</p><h2 id="profile-title">Мои записи</h2></div>
-        <button class="profile-close" id="profile-close" type="button" aria-label="Закрыть профиль">×</button>
+        <button class="profile-close" id="profile-close" type="button" aria-label="Закрыть профиль"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"></path></svg></button>
       </div>
       <p class="profile-note">Записи хранятся только в этом браузере и видны только вам на этом устройстве.</p>
       <div class="profile-content" id="profile-content"></div>
@@ -104,8 +104,26 @@
           <form id="booking-form" novalidate>
             <section class="booking-step" id="step-service" aria-labelledby="step-service-title">
               <div class="step-heading"><span class="step-count">01</span><div><h3 id="step-service-title">Что будем делать?</h3><p>Цены и длительность — условные.</p></div></div>
-              <label class="field-label" for="service-select">Услуга</label><select id="service-select" name="service" required></select>
-              <label class="field-label" for="master-select">Мастер <span id="recommendation-label" class="recommendation-label">Рекомендуем</span></label><select id="master-select" name="master" required></select>
+              <div class="picker-field" id="service-picker">
+                <span class="field-label" id="service-label">Услуга</span>
+                <input id="service-select" name="service" type="hidden" value="care">
+                <button class="picker-trigger" id="service-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="service-options" aria-labelledby="service-label service-value service-meta">
+                  <span class="picker-mark picker-mark-service" aria-hidden="true">01</span>
+                  <span class="picker-copy"><strong class="picker-value" id="service-value">Маникюр без покрытия</strong><span class="picker-meta" id="service-meta">1 500 ₽ · 60 минут</span></span>
+                  <svg class="picker-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+                </button>
+                <div class="picker-options" id="service-options" role="listbox" aria-labelledby="service-label" hidden></div>
+              </div>
+              <div class="picker-field" id="master-picker">
+                <div class="picker-field-heading"><span class="field-label" id="master-label">Мастер</span><span id="recommendation-label" class="recommendation-label">Рекомендуем</span></div>
+                <input id="master-select" name="master" type="hidden" value="alina">
+                <button class="picker-trigger" id="master-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="master-options" aria-labelledby="master-label master-value master-meta">
+                  <span class="picker-mark picker-mark-master" id="master-avatar" aria-hidden="true">А</span>
+                  <span class="picker-copy"><strong class="picker-value" id="master-value">Алина</strong><span class="picker-meta" id="master-meta">Мягкий маникюр · однотон</span></span>
+                  <svg class="picker-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+                </button>
+                <div class="picker-options" id="master-options" role="listbox" aria-labelledby="master-label" hidden></div>
+              </div>
             </section>
             <section class="booking-step" id="step-time" aria-labelledby="step-time-title">
               <div class="step-heading"><span class="step-count">02</span><div><h3 id="step-time-title">Когда вам удобно?</h3><p>Демо-слоты обновляются при смене услуги или мастера.</p></div></div>
