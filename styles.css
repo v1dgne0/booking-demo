@@ -3925,3 +3925,7 @@ body.page-scroll-locked {
   width: 100%;
   overflow: hidden;
 }
+
+html.modal-scroll-locked {
+  scroll-behavior: auto !important;
+}

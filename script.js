@@ -54,23 +54,36 @@ let calendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
 let lockedPageScrollY = 0;
 let modalLockCount = 0;
 let scrollToBookingOnMasterClose = false;
+let datePickerInteracted = false;
+const modalInvokers = new WeakMap();
 
 function showModal(dialog) {
   if (dialog.open) return;
+  modalInvokers.set(dialog, document.activeElement);
   if (modalLockCount === 0) {
     lockedPageScrollY = window.scrollY;
     document.body.style.top = `-${lockedPageScrollY}px`;
     document.body.classList.add("page-scroll-locked");
+    document.documentElement.classList.add("modal-scroll-locked");
   }
   modalLockCount += 1;
   dialog.showModal();
 }
-function unlockPageScroll() {
+function unlockPageScroll(event) {
+  const dialog = event.currentTarget;
+  const invoker = modalInvokers.get(dialog);
+  modalInvokers.delete(dialog);
   modalLockCount = Math.max(0, modalLockCount - 1);
   if (modalLockCount === 0) {
+    const restoreY = lockedPageScrollY;
     document.body.classList.remove("page-scroll-locked");
     document.body.style.top = "";
-    window.scrollTo(0, lockedPageScrollY);
+    window.requestAnimationFrame(() => {
+      window.scrollTo(0, restoreY);
+      if (invoker?.isConnected) invoker.focus({ preventScroll: true });
+      window.scrollTo(0, restoreY);
+      document.documentElement.classList.remove("modal-scroll-locked");
+    });
   }
 }
 [profileDialog, masterDialog, colorsDialog].forEach(dialog => dialog.addEventListener("close", unlockPageScroll));
@@ -271,7 +284,7 @@ function getDates() {
   const lastDate = new Date(today.getFullYear(), today.getMonth() + 3, 0);
   const result = [];
   for (const date = new Date(firstDate); date <= lastDate; date.setDate(date.getDate() + 1)) {
-    result.push(date);
+    result.push(new Date(date));
   }
   return result;
 }
@@ -303,6 +316,7 @@ function demoBusySlots(master, date) {
   if (!master.days.includes(date.getDay())) return [];
   const masterIndex = masters.findIndex(item => item.id === master.id);
   const dayNumber = Math.floor(date.getTime() / 86400000);
+  if ((dayNumber + masterIndex) % 3 !== 0) return [];
   const occupiedIndex = (dayNumber + masterIndex) % master.slots.length;
   return [dailySchedule(master, date)[occupiedIndex]];
 }
@@ -467,23 +481,34 @@ function renderDates() {
     cells.push(`<button class="date-option${free.length ? " has-free" : ""}${busy.length ? " has-busy" : ""}" type="button" data-date="${key}" aria-pressed="${selectedDay}" aria-label="${accessibleStatus}" title="${accessibleStatus}" ${canSelect ? "" : "disabled"}><span class="calendar-day-number">${day}</span><span class="calendar-day-status">${status}</span></button>`);
   }
   calendarMonthGrid.innerHTML = cells.join("");
-  dateOptions.innerHTML = availableDates.slice(0, 5).map(date => {
+  const selectedIndex = dates.findIndex(date => dateKey(date) === selected.date);
+  const firstFiveStart = datePickerInteracted && selectedIndex >= 0
+    ? Math.min(Math.max(selectedIndex - 2, 0), Math.max(dates.length - 5, 0))
+    : 0;
+  const visibleDates = dates.slice(firstFiveStart, firstFiveStart + 5);
+  dateOptions.innerHTML = visibleDates.map(date => {
     const freeCount = availableSlots(currentMaster(), date, currentService().duration, bookings).length;
     const key = dateKey(date);
     const label = new Intl.DateTimeFormat("ru-RU", { weekday: "short", day: "numeric", month: "short" }).format(date).replaceAll(".", "");
-    return `<button class="date-option date-quick-option has-free${key === selected.date ? " is-current" : ""}" type="button" data-date="${key}" aria-pressed="${key === selected.date}" aria-label="${label}, ${freeCount} свободных слота"><span class="calendar-day-number">${label}</span><span class="calendar-day-status">${freeCount} свободно</span></button>`;
+    const isOpen = currentMaster().days.includes(date.getDay());
+    const busyCount = busySlots(currentMaster(), date, bookings).length;
+    const status = !isOpen ? "Выходной" : freeCount ? `${freeCount} свободно` : "Нет мест";
+    const statusClass = freeCount ? " has-free" : busyCount ? " has-busy" : "";
+    const selectedClass = key === selected.date ? " is-current" : "";
+    return `<button class="date-option date-quick-option${statusClass}${selectedClass}" type="button" data-date="${key}" aria-pressed="${key === selected.date}" aria-label="${label}, ${status}" ${isOpen ? "" : "disabled"}><span class="calendar-day-number">${label}</span><span class="calendar-day-status">${status}</span></button>`;
   }).join("");
   [dateOptions, calendarMonthGrid].forEach(container => container.querySelectorAll("button[data-date]").forEach(button => button.addEventListener("click", () => {
     const chosenFromFullCalendar = container === calendarMonthGrid;
     clearFormError();
     selected.date = button.dataset.date;
     selected.time = "";
+    datePickerInteracted = true;
     renderDates();
     renderSlots();
     updateSummary();
     if (chosenFromFullCalendar) {
       closeCalendarPicker();
-      slotOptions.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "nearest" });
+      dateOptions.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "nearest" });
     }
   })));
 }
@@ -522,6 +547,7 @@ function renderSlots() {
   const master = currentMaster();
   const bookings = loadBookings();
   const savedTimes = date ? bookings.filter(item => item.master === master.id && item.date === dateKey(date)).map(item => item.time) : [];
+  const exampleBusyTimes = date ? demoBusySlots(master, date) : [];
   const scheduledSlots = date && master.days.includes(date.getDay())
     ? [...new Set([...dailySchedule(master, date), ...savedTimes])].filter(time => fitsOpeningHours(time, currentService().duration))
     : [];
@@ -531,8 +557,11 @@ function renderSlots() {
   document.querySelector("#selected-day-label").textContent = date ? `· ${new Intl.DateTimeFormat("ru-RU", { weekday: "long", day: "numeric", month: "long" }).format(date)}` : "· выберите дату";
   slotOptions.innerHTML = scheduledSlots.map(time => {
     const isBusy = occupiedSlots.includes(time);
-    const label = isBusy ? `${time}, занято в демо-расписании` : `${time}, свободно`;
-    return `<button class="slot-option${isBusy ? " is-busy" : " is-free"}" type="button" data-time="${time}" aria-label="${label}" aria-pressed="${!isBusy && selected.time === time}" ${isBusy ? "disabled" : ""}><span>${time}</span><small>${isBusy ? "Занято" : "Свободно"}</small></button>`;
+    const isSavedBooking = savedTimes.includes(time);
+    const isExampleBusy = isBusy && !isSavedBooking && exampleBusyTimes.includes(time);
+    const busyLabel = isSavedBooking ? "Ваша запись" : isExampleBusy ? "Занято · пример" : "Занято";
+    const label = isBusy ? `${time}, ${busyLabel.toLowerCase()}` : `${time}, свободно`;
+    return `<button class="slot-option${isBusy ? " is-busy" : " is-free"}" type="button" data-time="${time}" aria-label="${label}" aria-pressed="${!isBusy && selected.time === time}" ${isBusy ? "disabled" : ""}><span>${time}</span><small>${isBusy ? busyLabel : "Свободно"}</small></button>`;
   }).join("");
   emptySlots.hidden = freeSlots.length > 0;
   slotOptions.querySelectorAll("button").forEach(button => button.addEventListener("click", () => {
@@ -562,6 +591,7 @@ function resetTime() {
   clearFormError();
   selected.date = "";
   selected.time = "";
+  datePickerInteracted = false;
   renderDates();
   renderSlots();
   renderRecommendation();
