@@ -12,6 +12,7 @@ const masters = [
   { id: "nika", name: "Ника", days: [2, 3, 4, 5, 6], slots: ["10:30", "13:00", "15:30", "18:00"] }
 ];
 const STORAGE_KEY = "yagoda-demo-bookings-v1";
+const PROFILE_KEY = "yagoda-demo-profile-v1";
 const serviceSelect = document.querySelector("#service-select");
 const masterSelect = document.querySelector("#master-select");
 const dateOptions = document.querySelector("#date-options");
@@ -19,6 +20,10 @@ const slotOptions = document.querySelector("#slot-options");
 const emptySlots = document.querySelector("#slots-empty");
 const form = document.querySelector("#booking-form");
 const success = document.querySelector("#booking-success");
+const profileDialog = document.querySelector("#profile-dialog");
+const profileContent = document.querySelector("#profile-content");
+const profilePhoneInput = document.querySelector("#profile-phone");
+const profileError = document.querySelector("#profile-error");
 const selected = { service: services[0].id, master: services[0].master, date: "", time: "" };
 
 function loadBookings() {
@@ -30,6 +35,104 @@ function loadBookings() {
 function saveBookings(items) {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(items)); return true; }
   catch { return false; }
+}
+function normalizedPhone(value) {
+  let digits = String(value || "").replace(/\D/g, "");
+  if (digits.startsWith("8")) digits = `7${digits.slice(1)}`;
+  else if (digits.length === 10) digits = `7${digits}`;
+  return digits.startsWith("7") && digits.length === 11 ? digits : "";
+}
+function formattedProfilePhone(value) {
+  const digits = normalizedPhone(value);
+  return digits ? `+7 (${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(7, 9)}-${digits.slice(9, 11)}` : "";
+}
+function loadProfile() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(PROFILE_KEY) || "null");
+    if (stored && normalizedPhone(stored.phone)) return { ...stored, phone: normalizedPhone(stored.phone) };
+  } catch { /* Use the most recent local booking as the profile. */ }
+  const latest = loadBookings().filter(item => normalizedPhone(item.phone)).sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")))[0];
+  return latest ? { name: latest.name || "", phone: normalizedPhone(latest.phone) } : null;
+}
+function saveProfile(booking) {
+  const nextProfile = { name: booking.name, phone: normalizedPhone(booking.phone) };
+  try { localStorage.setItem(PROFILE_KEY, JSON.stringify(nextProfile)); } catch { /* Booking data remains available in the history. */ }
+  return nextProfile;
+}
+let currentProfile = loadProfile();
+function makeProfileText(tag, className, value) {
+  const element = document.createElement(tag);
+  if (className) element.className = className;
+  element.textContent = value;
+  return element;
+}
+function updateProfileButton() {
+  const count = document.querySelector("#profile-count");
+  const phone = currentProfile ? normalizedPhone(currentProfile.phone) : "";
+  const total = phone ? loadBookings().filter(item => normalizedPhone(item.phone) === phone).length : 0;
+  count.textContent = String(total);
+  count.setAttribute("aria-label", `${total} сохранённых демо-записей`);
+}
+function renderProfile() {
+  currentProfile = loadProfile() || currentProfile;
+  const phone = currentProfile ? normalizedPhone(currentProfile.phone) : "";
+  const bookings = phone ? loadBookings().filter(item => normalizedPhone(item.phone) === phone) : [];
+  profileContent.replaceChildren();
+  profilePhoneInput.value = formattedProfilePhone(phone);
+  profileError.hidden = true;
+
+  if (!phone) {
+    profileContent.append(makeProfileText("p", "profile-empty", "Здесь появятся ваши записи. Если вы уже записывались в этом браузере, введите телефон ниже."));
+    updateProfileButton();
+    return;
+  }
+
+  const profile = document.createElement("div");
+  profile.className = "profile-person";
+  const initial = (currentProfile?.name || "Я").trim().charAt(0).toLocaleUpperCase("ru-RU") || "Я";
+  profile.append(makeProfileText("span", "profile-avatar", initial));
+  const identity = document.createElement("div");
+  identity.append(makeProfileText("strong", "", currentProfile?.name || "Ваш профиль"));
+  identity.append(makeProfileText("span", "", "Личные записи в этом браузере"));
+  profile.append(identity);
+  profileContent.append(profile);
+
+  const today = dateKey(new Date());
+  const ordered = bookings.sort((a, b) => {
+    const pastA = a.date < today;
+    const pastB = b.date < today;
+    if (pastA !== pastB) return pastA ? 1 : -1;
+    return pastA ? `${b.date} ${b.time}`.localeCompare(`${a.date} ${a.time}`) : `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`);
+  });
+
+  if (!ordered.length) {
+    profileContent.append(makeProfileText("p", "profile-empty", "Записей с этим номером пока нет. Оформите демо-запись, и она появится здесь."));
+  }
+
+  ordered.forEach(booking => {
+    const service = services.find(item => item.id === booking.service);
+    const master = masters.find(item => item.id === booking.master);
+    const bookingDate = new Date(`${booking.date}T12:00:00`);
+    const isPast = booking.date < today;
+    const card = document.createElement("article");
+    card.className = "profile-booking";
+    card.append(makeProfileText("h3", "", service ? service.name : "Демо-услуга"));
+    card.append(makeProfileText("span", `profile-status${isPast ? " is-past" : ""}`, isPast ? "Прошла" : "Предстоит"));
+    card.append(makeProfileText("p", "", `${master ? master.name : "Мастер"} · ${service ? service.price.toLocaleString("ru-RU") : "—"} ₽`));
+    const dateTime = document.createElement("time");
+    dateTime.dateTime = `${booking.date}T${booking.time}`;
+    dateTime.textContent = `${formatDate(bookingDate)} · ${booking.time}`;
+    card.append(dateTime);
+    profileContent.append(card);
+  });
+
+  const newBooking = document.createElement("a");
+  newBooking.className = "button button-small profile-new-booking";
+  newBooking.href = "#booking";
+  newBooking.textContent = "Новая запись";
+  newBooking.addEventListener("click", () => profileDialog.close());
+  profileContent.append(newBooking);
+  updateProfileButton();
 }
 function formatDate(date) {
   return new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long" }).format(date);
@@ -177,6 +280,43 @@ function showError(message) {
   error.hidden = false;
   error.focus?.();
 }
+function showBookingSuccess() {
+  const card = success.closest(".booking-card");
+  form.hidden = true;
+  success.hidden = false;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    success.focus();
+    return;
+  }
+  const startHeight = card.getBoundingClientRect().height;
+  success.classList.add("is-entering");
+  card.style.height = `${startHeight}px`;
+  card.classList.add("is-resizing");
+
+  let finished = false;
+  const finish = () => {
+    if (finished) return;
+    finished = true;
+    clearTimeout(fallback);
+    card.style.height = "";
+    card.classList.remove("is-resizing");
+    success.focus();
+  };
+  const onTransitionEnd = event => {
+    if (event.target === card && event.propertyName === "height") {
+      card.removeEventListener("transitionend", onTransitionEnd);
+      finish();
+    }
+  };
+  const fallback = window.setTimeout(finish, 700);
+  card.addEventListener("transitionend", onTransitionEnd);
+  window.requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => {
+      card.style.height = `${card.scrollHeight}px`;
+      success.classList.remove("is-entering");
+    });
+  });
+}
 form.addEventListener("submit", event => {
   event.preventDefault();
   const name = document.querySelector("#client-name").value.trim();
@@ -198,11 +338,11 @@ form.addEventListener("submit", event => {
   const date = getDates().find(item => dateKey(item) === selected.date);
   const booking = { id: `${Date.now()}`, service: service.id, master: master.id, date: selected.date, time: selected.time, name, phone: phoneInput.value, createdAt: new Date().toISOString() };
   if (!saveBookings([...bookings, booking])) return showError("Браузер не разрешил сохранить демо-запись. Проверьте настройки хранения сайта.");
+  currentProfile = saveProfile(booking);
+  updateProfileButton();
   const dateTime = `${formatDate(date)}, ${selected.time}`;
   document.querySelector("#success-summary").textContent = `${service.name} · ${master.name} · ${dateTime} · ${service.price.toLocaleString("ru-RU")} ₽`;
-  form.hidden = true;
-  success.hidden = false;
-  success.focus();
+  showBookingSuccess();
 });
 document.querySelector("#restart-booking").addEventListener("click", () => {
   form.reset();
@@ -238,12 +378,67 @@ nav.querySelectorAll("a").forEach(link => link.addEventListener("click", () => {
   nav.classList.remove("is-open");
 }));
 
+const profileToggle = document.querySelector("#profile-toggle");
+profileToggle.addEventListener("click", () => {
+  if (menuToggle.getAttribute("aria-expanded") === "true") {
+    menuToggle.setAttribute("aria-expanded", "false");
+    menuToggle.setAttribute("aria-label", "Открыть меню");
+    nav.classList.remove("is-open");
+  }
+  renderProfile();
+  profileToggle.setAttribute("aria-expanded", "true");
+  profileDialog.showModal();
+  if (!currentProfile) profilePhoneInput.focus();
+});
+function closeProfile() {
+  if (profileDialog.open) profileDialog.close();
+  profileToggle.setAttribute("aria-expanded", "false");
+}
+document.querySelector("#profile-close").addEventListener("click", closeProfile);
+profileDialog.addEventListener("close", () => profileToggle.setAttribute("aria-expanded", "false"));
+profileDialog.addEventListener("click", event => {
+  if (event.target === profileDialog) closeProfile();
+});
+document.querySelector("#open-my-bookings").addEventListener("click", () => {
+  renderProfile();
+  profileToggle.setAttribute("aria-expanded", "true");
+  profileDialog.showModal();
+});
+document.querySelector("#profile-lookup").addEventListener("submit", event => {
+  event.preventDefault();
+  const phone = normalizedPhone(profilePhoneInput.value);
+  if (!phone) {
+    profileError.textContent = "Введите российский номер из 11 цифр, начиная с +7.";
+    profileError.hidden = false;
+    profilePhoneInput.focus();
+    return;
+  }
+  const matching = loadBookings().filter(item => normalizedPhone(item.phone) === phone);
+  profileError.hidden = true;
+  if (!matching.length) {
+    profileContent.replaceChildren(makeProfileText("p", "profile-empty", "Записей с этим номером в браузере не найдено. Проверьте номер или создайте демо-запись."));
+    return;
+  }
+  const latest = matching.sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")))[0];
+  currentProfile = saveProfile(latest);
+  renderProfile();
+});
+profilePhoneInput.addEventListener("input", () => { profileError.hidden = true; });
+window.addEventListener("storage", event => {
+  if (!event.key || event.key === STORAGE_KEY || event.key === PROFILE_KEY) {
+    currentProfile = loadProfile();
+    updateProfileButton();
+    if (profileDialog.open) renderProfile();
+  }
+});
+
 populateSelects();
 renderServices();
 renderDates();
 renderSlots();
 renderRecommendation();
 updateSummary();
+updateProfileButton();
 
 if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
   const revealItems = document.querySelectorAll(".section-heading, .service-row, .master-card, .work-card, .booking-card, .contact-details > div");

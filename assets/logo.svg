@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">Ягода</title>
+  <circle cx="32" cy="32" r="31" fill="#843b4b"/>
+  <path d="M31.8 21.4c-2.5-4.5-7.1-6.3-12.2-5.5 1 5.6 4.6 8.6 11.6 8.8m1-3.3c2.6-4.5 7.3-6.3 12.4-5.4-1 5.5-4.7 8.5-11.8 8.7" fill="#d8ada7" stroke="#d8ada7" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+  <path d="M32 23.5c-2.1-1.8-5.4-1.3-7.1 1-4.1.3-7.1 3.8-6.8 8.2.5 7.4 10.3 18.1 13.9 19.5 3.6-1.4 13.4-12.1 13.9-19.5.3-4.4-2.7-7.9-6.8-8.2-1.7-2.3-5-2.8-7.1-1Z" fill="#fff8f1"/>
+  <g fill="#843b4b">
+    <ellipse cx="25.5" cy="31" rx="1.1" ry="1.7" transform="rotate(-20 25.5 31)"/>
+    <ellipse cx="32" cy="29.5" rx="1.1" ry="1.7"/>
+    <ellipse cx="38.5" cy="31" rx="1.1" ry="1.7" transform="rotate(20 38.5 31)"/>
+    <ellipse cx="28.5" cy="37" rx="1.1" ry="1.7" transform="rotate(-10 28.5 37)"/>
+    <ellipse cx="35.5" cy="37" rx="1.1" ry="1.7" transform="rotate(10 35.5 37)"/>
+    <ellipse cx="32" cy="44" rx="1.1" ry="1.7"/>
+  </g>
+</svg>
