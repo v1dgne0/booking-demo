@@ -7,9 +7,15 @@ const services = [
   { id: "removal", name: "Снятие + маникюр", description: "Снятие покрытия и чистый маникюр", duration: 90, price: 1900, master: "alina" }
 ];
 const masters = [
-  { id: "alina", name: "Алина", specialty: "Мягкий маникюр · однотон", experience: "6 лет", bio: "Любит чистую форму и спокойные оттенки. Помогает подобрать покрытие, которое удобно носить каждый день.", days: [1, 2, 3, 4, 5, 6], slots: ["10:00", "12:30", "15:00", "17:30"], works: [{ title: "Ягодный глянец", style: "nail-red" }, { title: "Тёплый нюд", style: "nail-nude" }, { title: "Чистая форма", style: "nail-olive" }] },
-  { id: "mira", name: "Мира", specialty: "Форма · лаконичный дизайн", experience: "4 года", bio: "Сочетает аккуратную архитектуру ногтя с простыми деталями. Особенно любит нюдовые оттенки и тонкие линии.", days: [1, 2, 3, 4, 5], slots: ["11:00", "13:30", "16:00", "18:00"], works: [{ title: "Тихий нюд", style: "nail-nude" }, { title: "Ягодный акцент", style: "nail-red" }, { title: "Тонкая линия", style: "nail-olive" }] },
-  { id: "nika", name: "Ника", specialty: "Укрепление · тонкие детали", experience: "8 лет", bio: "Работает с укреплением и деликатным дизайном. Внимательно относится к комфорту и состоянию натуральных ногтей.", days: [2, 3, 4, 5, 6], slots: ["10:30", "13:00", "15:30", "18:00"], works: [{ title: "Оливковая линия", style: "nail-olive" }, { title: "Мягкий нюд", style: "nail-nude" }, { title: "Вишнёвый цвет", style: "nail-red" }] }
+  { id: "alina", name: "Алина", specialty: "Мягкий маникюр · однотон", experience: "6 лет", bio: "Любит чистую форму и спокойные оттенки. Помогает подобрать покрытие, которое удобно носить каждый день.", days: [1, 2, 3, 4, 5, 6], slots: ["10:00", "12:30", "15:00", "17:30"], works: [{ title: "Ягодный глянец", style: "nail-red" }, { title: "Тёплый нюд", style: "nail-nude" }, { title: "Чистая форма", style: "nail-olive" }], reviews: [{ name: "Анна", rating: 5, text: "Очень аккуратная работа и приятная атмосфера." }, { name: "Мария", rating: 5, text: "Помогла подобрать оттенок, результат понравился." }] },
+  { id: "mira", name: "Мира", specialty: "Форма · лаконичный дизайн", experience: "4 года", bio: "Сочетает аккуратную архитектуру ногтя с простыми деталями. Особенно любит нюдовые оттенки и тонкие линии.", days: [1, 2, 3, 4, 5], slots: ["11:00", "13:30", "16:00", "18:00"], works: [{ title: "Тихий нюд", style: "nail-nude" }, { title: "Ягодный акцент", style: "nail-red" }, { title: "Тонкая линия", style: "nail-olive" }], reviews: [] },
+  { id: "nika", name: "Ника", specialty: "Укрепление · тонкие детали", experience: "8 лет", bio: "Работает с укреплением и деликатным дизайном. Внимательно относится к комфорту и состоянию натуральных ногтей.", days: [2, 3, 4, 5, 6], slots: ["10:30", "13:00", "15:30", "18:00"], works: [{ title: "Оливковая линия", style: "nail-olive" }, { title: "Мягкий нюд", style: "nail-nude" }, { title: "Вишнёвый цвет", style: "nail-red" }], reviews: [{ name: "Елена", rating: 5, text: "Комфортно, спокойно и очень бережно." }] }
+];
+const nailColors = [
+  { name: "Тёплая вишня", style: "shade-cherry" }, { name: "Клюква", style: "shade-cranberry" }, { name: "Малина", style: "shade-raspberry" }, { name: "Красный мак", style: "shade-poppy" },
+  { name: "Розовый кварц", style: "shade-quartz" }, { name: "Пыльная роза", style: "shade-rose" }, { name: "Лиловый туман", style: "shade-lilac" }, { name: "Сливовый", style: "shade-plum" },
+  { name: "Молочный", style: "shade-milk" }, { name: "Песочный нюд", style: "shade-sand" }, { name: "Карамель", style: "shade-caramel" }, { name: "Кофейный", style: "shade-coffee" },
+  { name: "Шалфей", style: "shade-sage" }, { name: "Оливковый", style: "shade-olive" }, { name: "Морская волна", style: "shade-teal" }, { name: "Ночной синий", style: "shade-blue" }
 ];
 const STORAGE_KEY = "yagoda-demo-bookings-v1";
 const PROFILE_KEY = "yagoda-demo-profile-v1";
@@ -30,6 +36,9 @@ const masterDetailBody = document.querySelector("#master-detail-body");
 const calendarTitle = document.querySelector("#calendar-month-title");
 const calendarPrev = document.querySelector("#calendar-prev");
 const calendarNext = document.querySelector("#calendar-next");
+const calendarToggle = document.querySelector("#calendar-toggle");
+const calendarPicker = document.querySelector("#calendar-picker");
+const calendarMonthGrid = document.querySelector("#calendar-month-grid");
 const serviceTrigger = document.querySelector("#service-trigger");
 const masterTrigger = document.querySelector("#master-trigger");
 const serviceOptions = document.querySelector("#service-options");
@@ -100,10 +109,10 @@ function makeProfileAvatar() {
   icon.setAttribute("fill", "currentColor");
   const head = document.createElementNS("http://www.w3.org/2000/svg", "circle");
   head.setAttribute("cx", "12");
-  head.setAttribute("cy", "7.75");
-  head.setAttribute("r", "3.5");
+  head.setAttribute("cy", "8");
+  head.setAttribute("r", "3.25");
   const shoulders = document.createElementNS("http://www.w3.org/2000/svg", "path");
-  shoulders.setAttribute("d", "M4 20c.35-4.15 3.1-6.2 8-6.2s7.65 2.05 8 6.2H4Z");
+  shoulders.setAttribute("d", "M4 20c.45-4.15 3.1-6.25 8-6.25s7.55 2.1 8 6.25v1H4v-1Z");
   icon.append(head, shoulders);
   avatar.append(icon);
   return avatar;
@@ -234,18 +243,14 @@ function getDates() {
   today.setHours(0, 0, 0, 0);
   const firstDate = new Date(today);
   firstDate.setDate(firstDate.getDate() + 1);
-  const lastDate = new Date(today);
-  const preferredDay = lastDate.getDate();
-  lastDate.setDate(1);
-  lastDate.setMonth(lastDate.getMonth() + 3);
-  lastDate.setDate(Math.min(preferredDay, new Date(lastDate.getFullYear(), lastDate.getMonth() + 1, 0).getDate()));
+  const lastDate = new Date(today.getFullYear(), today.getMonth() + 3, 0);
   const result = [];
   for (const date = new Date(firstDate); date <= lastDate; date.setDate(date.getDate() + 1)) {
     result.push(date);
   }
   return result;
 }
-function monthKey(date) { return `${date.getFullYear()}-${date.getMonth()}`; }
+function monthKey(date) { return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`; }
 function monthDateLabel(date) {
   return new Intl.DateTimeFormat("ru-RU", { month: "long", year: "numeric" }).format(date);
 }
@@ -256,9 +261,10 @@ function currentService() { return services.find(item => item.id === selected.se
 function currentMaster() { return masters.find(item => item.id === selected.master); }
 function demoBusySlots(master, date) {
   if (!master.days.includes(date.getDay())) return [];
-  const dayNumber = Math.floor(date.getTime() / 86400000);
   const masterIndex = masters.findIndex(item => item.id === master.id);
-  return master.slots.filter((time, index) => (dayNumber + masterIndex * 2 + index * 3) % 6 === 0);
+  const dayNumber = Math.floor(date.getTime() / 86400000);
+  const occupiedIndex = (dayNumber + masterIndex) % master.slots.length;
+  return [master.slots[occupiedIndex]];
 }
 function busySlots(master, date, bookings = loadBookings()) {
   const actual = bookings
@@ -394,19 +400,17 @@ function renderDates() {
   if (!dates.some(date => dateKey(date) === selected.date && currentMaster().days.includes(date.getDay()))) {
     selected.date = availableDates[0] ? dateKey(availableDates[0]) : "";
   }
-  const firstDate = dates[0] || new Date();
-  const lastDate = dates[dates.length - 1] || firstDate;
-  const minMonth = new Date(firstDate.getFullYear(), firstDate.getMonth(), 1);
-  const maxMonth = new Date(lastDate.getFullYear(), lastDate.getMonth(), 1);
-  if (calendarMonth < minMonth) calendarMonth = minMonth;
-  if (calendarMonth > maxMonth) calendarMonth = maxMonth;
+  const today = new Date();
+  const minMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  const maxMonth = new Date(today.getFullYear(), today.getMonth() + 2, 1);
+  if (monthKey(calendarMonth) < monthKey(minMonth)) calendarMonth = minMonth;
+  if (monthKey(calendarMonth) > monthKey(maxMonth)) calendarMonth = maxMonth;
   calendarTitle.textContent = monthDateLabel(calendarMonth);
   calendarPrev.disabled = monthKey(calendarMonth) === monthKey(minMonth);
   calendarNext.disabled = monthKey(calendarMonth) === monthKey(maxMonth);
 
   const firstWeekday = (new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), 1).getDay() + 6) % 7;
   const daysInMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 0).getDate();
-  const today = new Date();
   today.setHours(0, 0, 0, 0);
   const cells = [...Array(firstWeekday).fill('<span class="calendar-blank" aria-hidden="true"></span>')];
   for (let day = 1; day <= daysInMonth; day += 1) {
@@ -417,21 +421,43 @@ function renderDates() {
     const free = availableSlots(currentMaster(), date, currentService().duration, bookings);
     const canSelect = isInRange && currentMaster().days.includes(date.getDay()) && date > today;
     const selectedDay = key === selected.date;
-    const status = free.length ? `${free.length} мест` : busy.length ? "занято" : "—";
+    const status = free.length ? `${free.length} свободно` : busy.length ? "всё занято" : "—";
     const spokenDate = new Intl.DateTimeFormat("ru-RU", { weekday: "long", day: "numeric", month: "long" }).format(date);
     const accessibleStatus = `${spokenDate}, ${free.length ? `${free.length} свободных слота` : "нет свободных слотов"}${busy.length ? `, ${busy.length} занято` : ""}`;
     cells.push(`<button class="date-option${free.length ? " has-free" : ""}${busy.length ? " has-busy" : ""}" type="button" data-date="${key}" aria-pressed="${selectedDay}" aria-label="${accessibleStatus}" title="${accessibleStatus}" ${canSelect ? "" : "disabled"}><span class="calendar-day-number">${day}</span><span class="calendar-day-status">${status}</span></button>`);
   }
-  dateOptions.innerHTML = cells.join("");
-  dateOptions.querySelectorAll("button").forEach(button => button.addEventListener("click", () => {
+  calendarMonthGrid.innerHTML = cells.join("");
+  dateOptions.innerHTML = availableDates.slice(0, 5).map(date => {
+    const freeCount = availableSlots(currentMaster(), date, currentService().duration, bookings).length;
+    const key = dateKey(date);
+    const label = new Intl.DateTimeFormat("ru-RU", { weekday: "short", day: "numeric", month: "short" }).format(date).replaceAll(".", "");
+    return `<button class="date-option date-quick-option has-free${key === selected.date ? " is-current" : ""}" type="button" data-date="${key}" aria-pressed="${key === selected.date}" aria-label="${label}, ${freeCount} свободных слота"><span class="calendar-day-number">${label}</span><span class="calendar-day-status">${freeCount} свободно</span></button>`;
+  }).join("");
+  [dateOptions, calendarMonthGrid].forEach(container => container.querySelectorAll("button[data-date]").forEach(button => button.addEventListener("click", () => {
     clearFormError();
     selected.date = button.dataset.date;
     selected.time = "";
     renderDates();
     renderSlots();
     updateSummary();
-  }));
+  })));
 }
+calendarToggle.addEventListener("click", () => {
+  const open = calendarToggle.getAttribute("aria-expanded") === "true";
+  calendarToggle.setAttribute("aria-expanded", String(!open));
+  calendarToggle.querySelector("span").textContent = open ? "⌄" : "⌃";
+  calendarToggle.firstChild.textContent = open ? "Выбрать другую дату " : "Скрыть календарь ";
+  if (open) {
+    calendarPicker.classList.remove("is-open");
+    window.setTimeout(() => {
+      if (calendarToggle.getAttribute("aria-expanded") === "false") calendarPicker.hidden = true;
+    }, 220);
+  } else {
+    calendarPicker.hidden = false;
+    renderDates();
+    window.requestAnimationFrame(() => calendarPicker.classList.add("is-open"));
+  }
+});
 calendarPrev.addEventListener("click", () => {
   calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1, 1);
   renderDates();
@@ -451,7 +477,7 @@ function renderSlots() {
   slotOptions.innerHTML = scheduledSlots.map(time => {
     const isBusy = occupiedSlots.includes(time);
     const label = isBusy ? `${time}, занято в демо-расписании` : `${time}, свободно`;
-    return `<button class="slot-option${isBusy ? " is-busy" : ""}" type="button" data-time="${time}" aria-label="${label}" aria-pressed="${!isBusy && selected.time === time}" ${isBusy ? "disabled" : ""}><span>${time}</span>${isBusy ? "<small>Занято</small>" : ""}</button>`;
+    return `<button class="slot-option${isBusy ? " is-busy" : " is-free"}" type="button" data-time="${time}" aria-label="${label}" aria-pressed="${!isBusy && selected.time === time}" ${isBusy ? "disabled" : ""}><span>${time}</span><small>${isBusy ? "Занято" : "Свободно"}</small></button>`;
   }).join("");
   emptySlots.hidden = freeSlots.length > 0;
   slotOptions.querySelectorAll("button").forEach(button => button.addEventListener("click", () => {
@@ -671,6 +697,33 @@ function renderMasterDetails(master) {
     works.append(item);
   });
   masterDetailBody.append(works);
+  const reviewSection = document.createElement("section");
+  reviewSection.className = "master-reviews";
+  const reviewHeading = document.createElement("div");
+  reviewHeading.className = "master-works-heading";
+  reviewHeading.append(makeProfileText("h3", "", "Отзывы"));
+  reviewHeading.append(makeProfileText("span", "", "Демо-отзывы"));
+  reviewSection.append(reviewHeading);
+  if (!master.reviews.length) {
+    reviewSection.append(makeProfileText("p", "master-reviews-empty", "Пока нет отзывов. После визита здесь появится первое впечатление клиента."));
+  } else {
+    const list = document.createElement("div");
+    list.className = "master-review-list";
+    master.reviews.forEach(review => {
+      const card = document.createElement("article");
+      card.className = "master-review-card";
+      const heading = document.createElement("div");
+      heading.className = "master-review-meta";
+      heading.append(makeProfileText("strong", "", review.name));
+      const rating = makeProfileText("span", "review-stars", `${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)}`);
+      rating.setAttribute("aria-label", `Оценка: ${review.rating} из 5`);
+      heading.append(rating);
+      card.append(heading, makeProfileText("p", "", review.text));
+      list.append(card);
+    });
+    reviewSection.append(list);
+  }
+  masterDetailBody.append(reviewSection);
   const bookingLink = document.createElement("a");
   bookingLink.className = "button button-small master-book-link";
   bookingLink.href = "#booking";
@@ -691,6 +744,23 @@ document.querySelectorAll("[data-master]").forEach(button => button.addEventList
 document.querySelector("#master-close").addEventListener("click", () => masterDialog.close());
 masterDialog.addEventListener("click", event => {
   if (event.target === masterDialog) masterDialog.close();
+});
+const colorsDialog = document.querySelector("#colors-dialog");
+const paletteGrid = document.querySelector("#palette-grid");
+function renderPalette() {
+  paletteGrid.innerHTML = nailColors.map(color => `
+    <article class="palette-color-card">
+      <div class="nail-art ${color.style}" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+      <p>${color.name}</p>
+    </article>`).join("");
+}
+document.querySelector("#show-all-colors").addEventListener("click", () => {
+  renderPalette();
+  colorsDialog.showModal();
+});
+document.querySelector("#colors-close").addEventListener("click", () => colorsDialog.close());
+colorsDialog.addEventListener("click", event => {
+  if (event.target === colorsDialog) colorsDialog.close();
 });
 document.querySelector("#profile-close").addEventListener("click", closeProfile);
 profileDialog.addEventListener("close", () => profileToggle.setAttribute("aria-expanded", "false"));

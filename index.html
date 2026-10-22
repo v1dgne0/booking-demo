@@ -54,6 +54,14 @@
       </div>
       <div class="master-detail-body" id="master-detail-body"></div>
     </dialog>
+    <dialog class="profile-dialog palette-dialog" id="colors-dialog" aria-labelledby="colors-title">
+      <div class="profile-dialog-heading">
+        <div><p class="eyebrow">Палитра студии · демо</p><h2 id="colors-title">Все оттенки</h2></div>
+        <button class="profile-close" id="colors-close" type="button" aria-label="Закрыть палитру"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"></path></svg></button>
+      </div>
+      <p class="palette-note">Иллюстрации показывают оттенки покрытия, а не реальные фотографии работ.</p>
+      <div class="palette-grid" id="palette-grid"></div>
+    </dialog>
   </header>
 
   <main id="main">
@@ -99,6 +107,7 @@
         <article class="work-card work-two"><div class="nail-art nail-nude" aria-hidden="true"><span></span><span></span><span></span><span></span></div><p>тихий нюд</p></article>
         <article class="work-card work-three"><div class="nail-art nail-olive" aria-hidden="true"><span></span><span></span><span></span><span></span></div><p>оливковая линия</p></article>
       </div>
+      <button class="button button-small palette-open" id="show-all-colors" type="button" aria-haspopup="dialog" aria-controls="colors-dialog">Смотреть все оттенки <span aria-hidden="true">↗</span></button>
       <p class="demo-caption"><span class="tiny-dot"></span> Все примеры — графические иллюстрации для демо-проекта</p>
     </section>
 
@@ -114,7 +123,7 @@
                 <span class="field-label" id="service-label">Услуга</span>
                 <input id="service-select" name="service" type="hidden" value="care">
                 <button class="picker-trigger" id="service-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="service-options" aria-labelledby="service-label service-value service-meta">
-                  <span class="picker-mark picker-mark-service" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20S4.5 15.8 4.5 9.7A4.1 4.1 0 0 1 12 7.3a4.1 4.1 0 0 1 7.5 2.4C19.5 15.8 12 20 12 20Z"></path><path d="M8.3 10.2h.1m3.7-4.8h.1m3.5 4.8h.1"></path></svg></span>
+                  <span class="picker-mark picker-mark-service" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 3h6v3l1.5 1.5V20H7.5V7.5L9 6V3Z"></path><path d="M9 3h6M8 10h8"></path><path d="M10 13h4"></path></svg></span>
                   <span class="picker-copy"><strong class="picker-value" id="service-value">Маникюр без покрытия</strong><span class="picker-meta" id="service-meta">1 500 ₽ · 60 минут</span></span>
                   <svg class="picker-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
                 </button>
@@ -133,11 +142,16 @@
             </section>
             <section class="booking-step" id="step-time" aria-labelledby="step-time-title">
               <div class="step-heading"><div><h3 id="step-time-title">Когда вам удобно?</h3><p>Можно выбрать дату в ближайшие три месяца.</p></div></div>
-              <div class="calendar-heading"><span class="field-label date-label">Дата <span class="timezone-note">время местное</span></span><div class="calendar-month-controls"><button class="calendar-month-button" id="calendar-prev" type="button" aria-label="Предыдущий месяц"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button><strong id="calendar-month-title" aria-live="polite"></strong><button class="calendar-month-button" id="calendar-next" type="button" aria-label="Следующий месяц"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button></div></div>
-              <div class="calendar-weekdays" aria-hidden="true"><span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span></div>
+              <div class="calendar-heading"><span class="field-label date-label">Ближайшие даты <span class="timezone-note">время местное</span></span></div>
               <div id="date-options" class="date-options" role="group" aria-label="Доступные даты в календаре"></div>
-              <div class="calendar-legend"><span><i class="legend-free"></i>Есть свободное время</span><span><i class="legend-busy"></i>Есть занятые слоты</span></div>
-              <p class="calendar-note">Занятость показана для примера и не синхронизируется с другими посетителями.</p>
+              <button class="calendar-toggle" id="calendar-toggle" type="button" aria-expanded="false" aria-controls="calendar-picker">Выбрать другую дату <span aria-hidden="true">⌄</span></button>
+              <div class="calendar-picker" id="calendar-picker" hidden>
+                <div class="calendar-heading calendar-expanded-heading"><span class="field-label">Полный календарь</span><div class="calendar-month-controls"><button class="calendar-month-button" id="calendar-prev" type="button" aria-label="Предыдущий месяц"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button><strong id="calendar-month-title" aria-live="polite"></strong><button class="calendar-month-button" id="calendar-next" type="button" aria-label="Следующий месяц"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button></div></div>
+                <div class="calendar-weekdays" aria-hidden="true"><span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span></div>
+                <div id="calendar-month-grid" class="date-options calendar-month-grid" role="group" aria-label="Даты выбранного месяца"></div>
+                <div class="calendar-legend"><span><i class="legend-free"></i>Есть свободные места</span><span><i class="legend-busy"></i>Есть занятые места</span></div>
+                <p class="calendar-note">Занятость показана для примера и не синхронизируется с другими посетителями.</p>
+              </div>
               <div class="field-label slot-label">Время <span class="timezone-note">занятые слоты отмечены</span></div><div id="slot-options" class="slot-options" role="group" aria-label="Свободное и занятое время"></div><p id="slots-empty" class="empty-slots" role="status" aria-live="polite" hidden>На эту дату свободного времени нет. Выберите другой день.</p>
             </section>
             <section class="booking-step" id="step-contact" aria-labelledby="step-contact-title">
