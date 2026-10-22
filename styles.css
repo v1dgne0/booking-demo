@@ -2104,6 +2104,7 @@ body {
   background: var(--white);
   color: var(--ink);
   box-shadow: 0 28px 90px rgba(48, 40, 42, .22);
+  overscroll-behavior: contain;
 }
 
 .profile-dialog[open] {
@@ -2870,7 +2871,15 @@ body {
 }
 
 .master-book-link {
-  justify-self: start;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  justify-self: stretch;
+  box-shadow: 0 6px 16px rgba(48, 35, 34, .13);
 }
 
 .calendar-heading {
@@ -3641,6 +3650,7 @@ body {
   opacity: 0;
   transform: translateY(-5px);
   transition: max-height 240ms ease, opacity 180ms ease, transform 180ms ease;
+  overscroll-behavior: contain;
 }
 
 .calendar-picker[hidden] {
@@ -3749,6 +3759,8 @@ body {
   width: 24px;
   height: 24px;
   margin: 0;
+  overflow: visible;
+  transform: translateY(1px);
 }
 
 .master-reviews {
@@ -3795,6 +3807,7 @@ body {
 
 .palette-dialog {
   width: min(810px, calc(100vw - 32px));
+  overflow: hidden;
 }
 
 .palette-note {
@@ -3811,6 +3824,8 @@ body {
   max-height: min(58vh, 520px);
   overflow: auto;
   padding: 2px;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
 }
 
 .palette-color-card {
@@ -3894,6 +3909,7 @@ body {
 
   .palette-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-height: 54vh;
   }
 }
 
@@ -3901,4 +3917,11 @@ body {
   .calendar-picker {
     transition: none;
   }
+}
+
+body.page-scroll-locked {
+  position: fixed;
+  inset-inline: 0;
+  width: 100%;
+  overflow: hidden;
 }
