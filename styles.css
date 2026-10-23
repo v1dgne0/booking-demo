@@ -3914,20 +3914,30 @@ body {
 
 @media (max-width: 600px) {
   .date-options:not(.calendar-month-grid) {
-    gap: 4px;
+    gap: 3px;
   }
 
-  .date-quick-option {
-    min-height: 54px;
-    padding-inline: 2px;
+  .date-options:not(.calendar-month-grid) .date-quick-option {
+    min-width: 0;
+    min-height: 50px;
+    gap: 0;
+    padding-inline: 0;
   }
 
-  .date-quick-option .calendar-day-number {
-    font-size: 10px;
+  .date-options:not(.calendar-month-grid) .date-quick-option .calendar-day-number {
+    max-width: 100%;
+    font-size: 9px;
+    line-height: 1.1;
+    letter-spacing: -.02em;
+    white-space: nowrap;
   }
 
-  .date-quick-option .calendar-day-status {
-    font-size: 8px;
+  .date-options:not(.calendar-month-grid) .date-quick-option .calendar-day-status {
+    max-width: 100%;
+    font-size: 7px;
+    line-height: 1.1;
+    letter-spacing: -.02em;
+    white-space: nowrap;
   }
 
   .calendar-picker {
