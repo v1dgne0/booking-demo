@@ -4533,3 +4533,11 @@ html.modal-scroll-locked {
 .date-option .calendar-day-status {
   color: #625752;
 }
+
+.booking-card {
+  color: var(--ink);
+}
+
+.booking-card .step-heading p {
+  color: var(--muted);
+}
