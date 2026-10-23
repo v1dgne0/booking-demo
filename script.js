@@ -130,6 +130,19 @@ function normalizedPhone(value) {
   else if (digits.length === 10) digits = `7${digits}`;
   return digits.startsWith("7") && digits.length === 11 ? digits : "";
 }
+function formatPhoneInput(input) {
+  let digits = input.value.replace(/\D/g, "");
+  if (digits.startsWith("8")) digits = `7${digits.slice(1)}`;
+  else if (digits && !digits.startsWith("7")) digits = `7${digits}`;
+  digits = digits.slice(0, 11);
+  let formatted = "+7";
+  if (digits.length > 1) formatted += ` (${digits.slice(1, 4)}`;
+  if (digits.length >= 4) formatted += ")";
+  if (digits.length > 4) formatted += ` ${digits.slice(4, 7)}`;
+  if (digits.length > 7) formatted += `-${digits.slice(7, 9)}`;
+  if (digits.length > 9) formatted += `-${digits.slice(9, 11)}`;
+  input.value = digits.length > 1 ? formatted : (digits ? "+7" : "");
+}
 function formattedProfilePhone(value) {
   const digits = normalizedPhone(value);
   return digits ? `+7 (${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(7, 9)}-${digits.slice(9, 11)}` : "";
@@ -634,19 +647,7 @@ masterSelect.addEventListener("change", () => {
 });
 
 const phoneInput = document.querySelector("#client-phone");
-phoneInput.addEventListener("input", () => {
-  let digits = phoneInput.value.replace(/\D/g, "");
-  if (digits.startsWith("8")) digits = `7${digits.slice(1)}`;
-  else if (digits && !digits.startsWith("7")) digits = `7${digits}`;
-  digits = digits.slice(0, 11);
-  let formatted = "+7";
-  if (digits.length > 1) formatted += ` (${digits.slice(1, 4)}`;
-  if (digits.length >= 4) formatted += ")";
-  if (digits.length > 4) formatted += ` ${digits.slice(4, 7)}`;
-  if (digits.length > 7) formatted += `-${digits.slice(7, 9)}`;
-  if (digits.length > 9) formatted += `-${digits.slice(9, 11)}`;
-  phoneInput.value = digits.length > 1 ? formatted : (digits ? "+7" : "");
-});
+phoneInput.addEventListener("input", () => formatPhoneInput(phoneInput));
 function showError(message) {
   const error = document.querySelector("#form-error");
   error.textContent = message;
@@ -906,7 +907,10 @@ document.querySelector("#profile-lookup").addEventListener("submit", event => {
   currentProfile = saveProfile(latest);
   renderProfile();
 });
-profilePhoneInput.addEventListener("input", () => { profileError.hidden = true; });
+profilePhoneInput.addEventListener("input", () => {
+  formatPhoneInput(profilePhoneInput);
+  profileError.hidden = true;
+});
 profileContent.addEventListener("submit", event => {
   const reviewForm = event.target.closest(".profile-review-form");
   if (!reviewForm) return;

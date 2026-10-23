@@ -2310,6 +2310,7 @@ body {
   border-radius: 8px;
   background: #fffdfa;
   color: var(--ink);
+  font-variant-numeric: tabular-nums;
 }
 
 .profile-error {
@@ -3795,7 +3796,7 @@ body {
   height: 24px;
   margin: 0;
   overflow: visible;
-  transform: translateY(1px);
+  transform: translateY(2px);
 }
 
 .master-reviews {
