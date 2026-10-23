@@ -4541,3 +4541,18 @@ html.modal-scroll-locked {
 .booking-card .step-heading p {
   color: var(--muted);
 }
+
+.booking-card .step-heading h3 {
+  color: var(--ink);
+}
+
+.booking-card .progress-step {
+  color: var(--muted);
+}
+
+.booking-intro .eyebrow,
+.booking-intro h2 em,
+.booking-intro > p:not(.eyebrow),
+.booking-aside {
+  color: #f0c5c3;
+}
