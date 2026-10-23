@@ -3959,6 +3959,12 @@ body {
   }
 }
 
+@media (max-width: 360px) {
+  .date-options:not(.calendar-month-grid) .date-quick-option .calendar-day-number {
+    font-size: 8px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .calendar-picker {
     transition: none;
