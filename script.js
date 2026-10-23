@@ -167,6 +167,23 @@ function makeProfileText(tag, className, value) {
   element.textContent = value;
   return element;
 }
+function makeRatingStars(rating) {
+  const value = Math.max(0, Math.min(5, Number(rating) || 0));
+  const stars = document.createElement("span");
+  stars.className = "review-stars";
+  stars.setAttribute("aria-label", `Оценка: ${value} из 5`);
+  for (let index = 0; index < 5; index += 1) {
+    const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    icon.setAttribute("viewBox", "0 0 24 24");
+    icon.setAttribute("aria-hidden", "true");
+    icon.classList.toggle("is-filled", index < value);
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", "m12 3 2.8 5.7 6.3.9-4.55 4.45 1.08 6.28L12 17.35l-5.63 2.98 1.08-6.28L2.9 9.6l6.3-.9L12 3Z");
+    icon.append(path);
+    stars.append(icon);
+  }
+  return stars;
+}
 function makeProfileAvatar() {
   const avatar = document.createElement("span");
   avatar.className = "profile-avatar";
@@ -264,8 +281,7 @@ function appendBookingReview(card, booking, master, isPast, reviews) {
   if (review) {
     panel.classList.add("has-review");
     const title = makeProfileText("strong", "", review.target === "master" ? `Отзыв о мастере ${master?.name || ""}` : "Отзыв о салоне");
-    const stars = makeProfileText("span", "review-stars", `${"★".repeat(Number(review.rating))}${"☆".repeat(5 - Number(review.rating))}`);
-    stars.setAttribute("aria-label", `Оценка: ${review.rating} из 5`);
+    const stars = makeRatingStars(review.rating);
     panel.append(title, stars, makeProfileText("p", "", review.text));
   } else if (isPast) {
     const reveal = makeProfileText("button", "button button-small review-start", "Оставить отзыв");
@@ -465,7 +481,7 @@ function renderServices() {
       <div><h3 class="service-name">${item.name}</h3><p class="service-description">${item.description}</p></div>
       <span class="service-duration">${item.duration} минут</span>
       <span class="service-price">${item.price.toLocaleString("ru-RU")} ₽</span>
-      <button class="button button-small service-action" type="button" data-service="${item.id}" aria-label="Выбрать услугу: ${item.name}">Выбрать <span aria-hidden="true">↗</span></button>
+      <button class="button button-small service-action" type="button" data-service="${item.id}" aria-label="Выбрать услугу: ${item.name}">Выбрать <svg class="ui-icon icon-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg></button>
     </article>`).join("");
   list.querySelectorAll("[data-service]").forEach(button => button.addEventListener("click", () => {
     serviceSelect.value = button.dataset.service;
@@ -550,7 +566,7 @@ function renderDates() {
 }
 function closeCalendarPicker() {
   calendarToggle.setAttribute("aria-expanded", "false");
-  calendarToggle.querySelector("span").textContent = "⌄";
+  calendarToggle.classList.remove("is-open");
   calendarToggle.firstChild.textContent = "Выбрать другую дату ";
   calendarPicker.classList.remove("is-open");
   window.setTimeout(() => {
@@ -564,7 +580,7 @@ calendarToggle.addEventListener("click", () => {
     return;
   }
   calendarToggle.setAttribute("aria-expanded", "true");
-  calendarToggle.querySelector("span").textContent = "⌃";
+  calendarToggle.classList.add("is-open");
   calendarToggle.firstChild.textContent = "Скрыть календарь ";
   calendarPicker.hidden = false;
   renderDates();
@@ -833,8 +849,7 @@ function renderMasterDetails(master) {
       const heading = document.createElement("div");
       heading.className = "master-review-meta";
       heading.append(makeProfileText("strong", "", review.name));
-      const rating = makeProfileText("span", "review-stars", `${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)}`);
-      rating.setAttribute("aria-label", `Оценка: ${review.rating} из 5`);
+      const rating = makeRatingStars(review.rating);
       heading.append(rating);
       card.append(heading, makeProfileText("p", "", review.text));
       list.append(card);
