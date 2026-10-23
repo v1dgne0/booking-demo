@@ -131,7 +131,17 @@ function normalizedPhone(value) {
   return digits.startsWith("7") && digits.length === 11 ? digits : "";
 }
 function formatPhoneInput(input) {
-  let digits = input.value.replace(/\D/g, "");
+  const rawValue = input.value;
+  const start = input.selectionStart ?? rawValue.length;
+  const end = input.selectionEnd ?? rawValue.length;
+  const digitsBeforeStart = rawValue.slice(0, start).replace(/\D/g, "").length;
+  const digitsBeforeEnd = rawValue.slice(0, end).replace(/\D/g, "").length;
+  let digits = rawValue.replace(/\D/g, "");
+  if (!digits) {
+    input.value = "";
+    return;
+  }
+  const addCountryCode = !digits.startsWith("7") && !digits.startsWith("8");
   if (digits.startsWith("8")) digits = `7${digits.slice(1)}`;
   else if (digits && !digits.startsWith("7")) digits = `7${digits}`;
   digits = digits.slice(0, 11);
@@ -141,7 +151,30 @@ function formatPhoneInput(input) {
   if (digits.length > 4) formatted += ` ${digits.slice(4, 7)}`;
   if (digits.length > 7) formatted += `-${digits.slice(7, 9)}`;
   if (digits.length > 9) formatted += `-${digits.slice(9, 11)}`;
-  input.value = digits.length > 1 ? formatted : (digits ? "+7" : "");
+  input.value = formatted;
+  const caretForDigitCount = count => {
+    if (count <= 0) return 0;
+    let seen = 0;
+    for (let index = 0; index < formatted.length; index += 1) {
+      if (/\d/.test(formatted[index])) seen += 1;
+      if (seen >= count) return index + 1;
+    }
+    return formatted.length;
+  };
+  const startCount = Math.min(11, digitsBeforeStart + (addCountryCode && digitsBeforeStart > 0 ? 1 : 0));
+  const endCount = Math.min(11, digitsBeforeEnd + (addCountryCode && digitsBeforeEnd > 0 ? 1 : 0));
+  input.setSelectionRange(caretForDigitCount(startCount), caretForDigitCount(endCount));
+}
+function clearPhoneAtPrefix(event, input) {
+  if (event.key !== "Backspace" && event.key !== "Delete") return;
+  const start = input.selectionStart;
+  const end = input.selectionEnd;
+  if (start !== end) return;
+  if ((event.key === "Backspace" && start <= 4) || (event.key === "Delete" && start < 4)) {
+    event.preventDefault();
+    input.value = "";
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+  }
 }
 function formattedProfilePhone(value) {
   const digits = normalizedPhone(value);
@@ -663,6 +696,8 @@ masterSelect.addEventListener("change", () => {
 });
 
 const phoneInput = document.querySelector("#client-phone");
+phoneInput.addEventListener("keydown", event => clearPhoneAtPrefix(event, phoneInput));
+phoneInput.addEventListener("input", () => formatPhoneInput(phoneInput));
 phoneInput.addEventListener("blur", () => formatPhoneInput(phoneInput));
 function showError(message) {
   const error = document.querySelector("#form-error");
@@ -923,8 +958,10 @@ document.querySelector("#profile-lookup").addEventListener("submit", event => {
   renderProfile();
 });
 profilePhoneInput.addEventListener("input", () => {
+  formatPhoneInput(profilePhoneInput);
   profileError.hidden = true;
 });
+profilePhoneInput.addEventListener("keydown", event => clearPhoneAtPrefix(event, profilePhoneInput));
 profilePhoneInput.addEventListener("blur", () => formatPhoneInput(profilePhoneInput));
 profileContent.addEventListener("submit", event => {
   const reviewForm = event.target.closest(".profile-review-form");
