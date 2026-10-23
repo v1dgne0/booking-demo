@@ -663,7 +663,7 @@ masterSelect.addEventListener("change", () => {
 });
 
 const phoneInput = document.querySelector("#client-phone");
-phoneInput.addEventListener("input", () => formatPhoneInput(phoneInput));
+phoneInput.addEventListener("blur", () => formatPhoneInput(phoneInput));
 function showError(message) {
   const error = document.querySelector("#form-error");
   error.textContent = message;
@@ -923,9 +923,9 @@ document.querySelector("#profile-lookup").addEventListener("submit", event => {
   renderProfile();
 });
 profilePhoneInput.addEventListener("input", () => {
-  formatPhoneInput(profilePhoneInput);
   profileError.hidden = true;
 });
+profilePhoneInput.addEventListener("blur", () => formatPhoneInput(profilePhoneInput));
 profileContent.addEventListener("submit", event => {
   const reviewForm = event.target.closest(".profile-review-form");
   if (!reviewForm) return;
