@@ -497,6 +497,7 @@ function getAvailableDates() {
   return getDates().filter(date => availableSlots(master, date, service.duration, bookings).length > 0);
 }
 function renderDates() {
+  const formatFreeCount = count => `${count} ${count % 100 >= 11 && count % 100 <= 14 ? "мест" : count % 10 === 1 ? "место" : count % 10 >= 2 && count % 10 <= 4 ? "места" : "мест"}`;
   const dates = getDates();
   const availableDates = getAvailableDates();
   const bookings = loadBookings();
@@ -527,10 +528,11 @@ function renderDates() {
     const selectedDay = key === selected.date;
     const spokenDate = new Intl.DateTimeFormat("ru-RU", { weekday: "long", day: "numeric", month: "long" }).format(date);
     const status = isPast ? "" : !isInRange ? "" : !currentMaster().days.includes(date.getDay()) ? "Выходной" : free.length ? `${free.length} свободно` : busy.length ? "всё занято" : "—";
+    const visualStatus = free.length ? formatFreeCount(free.length) : status;
     const accessibleStatus = isPast
       ? `${spokenDate}, дата прошла`
       : `${spokenDate}${status ? `, ${status}` : ", запись недоступна"}${busy.length ? `, ${busy.length} занято` : ""}`;
-    cells.push(`<button class="date-option${isPast ? " is-past" : ""}${free.length ? " has-free" : ""}${busy.length ? " has-busy" : ""}" type="button" data-date="${key}" aria-pressed="${selectedDay}" aria-label="${accessibleStatus}" title="${accessibleStatus}" ${canSelect ? "" : "disabled"}><span class="calendar-day-number">${day}</span>${status ? `<span class="calendar-day-status">${status}</span>` : ""}</button>`);
+    cells.push(`<button class="date-option${isPast ? " is-past" : ""}${free.length ? " has-free" : ""}${busy.length ? " has-busy" : ""}" type="button" data-date="${key}" aria-pressed="${selectedDay}" aria-label="${accessibleStatus}" title="${accessibleStatus}" ${canSelect ? "" : "disabled"}><span class="calendar-day-number">${day}</span>${status ? `<span class="calendar-day-status">${visualStatus}</span>` : ""}</button>`);
   }
   calendarMonthGrid.innerHTML = cells.join("");
   const selectedIndex = dates.findIndex(date => dateKey(date) === selected.date);
@@ -545,9 +547,10 @@ function renderDates() {
     const isOpen = currentMaster().days.includes(date.getDay());
     const busyCount = busySlots(currentMaster(), date, bookings).length;
     const status = !isOpen ? "Выходной" : freeCount ? `${freeCount} свободно` : "Нет мест";
+    const visualStatus = freeCount ? formatFreeCount(freeCount) : status;
     const statusClass = freeCount ? " has-free" : busyCount ? " has-busy" : "";
     const selectedClass = key === selected.date ? " is-current" : "";
-    return `<button class="date-option date-quick-option${statusClass}${selectedClass}" type="button" data-date="${key}" aria-pressed="${key === selected.date}" aria-label="${label}, ${status}" ${isOpen ? "" : "disabled"}><span class="calendar-day-number">${label}</span><span class="calendar-day-status">${status}</span></button>`;
+    return `<button class="date-option date-quick-option${statusClass}${selectedClass}" type="button" data-date="${key}" aria-pressed="${key === selected.date}" aria-label="${label}, ${status}" ${isOpen ? "" : "disabled"}><span class="calendar-day-number">${label}</span><span class="calendar-day-status">${visualStatus}</span></button>`;
   }).join("");
   [dateOptions, calendarMonthGrid].forEach(container => container.querySelectorAll("button[data-date]").forEach(button => button.addEventListener("click", () => {
     const chosenFromFullCalendar = container === calendarMonthGrid;
@@ -987,6 +990,5 @@ if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-mot
   }, { threshold: 0.12, rootMargin: "0px 0px -36px 0px" });
   revealItems.forEach(item => revealObserver.observe(item));
 }
-
 
 

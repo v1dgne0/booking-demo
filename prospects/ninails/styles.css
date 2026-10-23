@@ -4554,3 +4554,19 @@ html.modal-scroll-locked {
   .hero-art.ninails-hero-art { min-height: 280px; }
   .service-includes-note { font-size: 13px; }
 }
+
+@media (max-width: 600px) {
+  .date-option { min-width: 0; overflow: hidden; }
+  .date-option .calendar-day-status {
+    display: block;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    text-align: center;
+    white-space: normal;
+    font-size: clamp(8px, 2.5vw, 10px);
+    line-height: 1.1;
+  }
+  .date-options:not(.calendar-month-grid) .date-quick-option { min-height: 56px; padding-inline: 3px; }
+  .date-options:not(.calendar-month-grid) .date-quick-option .calendar-day-number { font-size: 10px; }
+  .date-options:not(.calendar-month-grid) .date-quick-option .calendar-day-status { font-size: 9px; }
+}
