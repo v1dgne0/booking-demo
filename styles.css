@@ -3962,6 +3962,7 @@ body {
 @media (max-width: 360px) {
   .date-options:not(.calendar-month-grid) .date-quick-option .calendar-day-number {
     font-size: 8px;
+    letter-spacing: -.05em;
   }
 }
 
