@@ -4497,12 +4497,12 @@ html.modal-scroll-locked {
 
 
 /* ВАША — натуральные оттенки дерева, камня и мягкого света. */
-:root { --paper:#f4eee6; --paper-deep:#e7d9ca; --ink:#30251e; --muted:#76685c; --berry:#8d6046; --berry-dark:#543b2c; --rose:#c9aa8d; --line:#d9c7b5; --white:#fffaf4; --shadow:0 24px 60px rgba(65,43,27,.12); }
+:root { --paper:#f4eee6; --paper-deep:#e7d9ca; --ink:#30251e; --muted:#6d6159; --berry:#7d543b; --berry-dark:#543b2c; --rose:#c9aa8d; --line:#d9c7b5; --white:#fffaf4; --shadow:0 24px 60px rgba(65,43,27,.12); }
 .demo-ribbon,.intro-band,.booking-section { background:#49342a; color:#fff8ef; }
 .demo-ribbon { color:#e9c9a8; }
-.button { background:#8d6046; border-color:#8d6046; color:#fffaf4; }
-.button:hover { background:#704a36; border-color:#704a36; }
-.hero-copy h1 em,.section-heading h2 em,.booking-intro h2 em { color:#9b6848; }
+.button { background:#7d543b; border-color:#7d543b; color:#fffaf4; }
+.button:hover { background:#6d4733; border-color:#6d4733; }
+.hero-copy h1 em,.section-heading h2 em,.booking-intro h2 em { color:#7d543b; }
 .contacts-section,.vasha-price-table { background:#eee4d9; }
 .contact-details a,.service-price { color:#704a36; }
 .site-footer { background:#30231d; color:#fff8ef; }
@@ -4521,3 +4521,23 @@ html.modal-scroll-locked {
 .intro-band.vasha-intro { display:flex; align-items:center; justify-content:space-between; gap:28px; }
 .intro-band.vasha-intro p { flex:1; }
 @media(max-width:700px){.intro-band.vasha-intro{align-items:flex-start}.vasha-sign-photo{width:72px;height:94px}.vasha-price-table{padding:14px}}
+
+.date-option:disabled,
+.date-option.is-past:disabled {
+  border-color: #d4c9c1;
+  background: #ece7e2;
+  color: #543b2c;
+  opacity: 1;
+}
+
+.slot-option.is-busy,
+.slot-option.is-busy:disabled,
+.slot-option.is-busy small,
+.profile-status.is-past {
+  color: var(--berry-dark);
+}
+
+.calendar-note,
+.date-option .calendar-day-status {
+  color: #625752;
+}

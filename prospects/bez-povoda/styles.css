@@ -4497,12 +4497,12 @@ html.modal-scroll-locked {
 
 
 /* БЕЗ ПОВОДА — графитовая основа, светлый камень и сдержанные красные акценты. */
-:root { --paper:#f2f1ef; --paper-deep:#e4e1df; --ink:#282625; --muted:#706967; --berry:#a8444a; --berry-dark:#762f35; --rose:#cf8c8d; --line:#d7d0cd; --white:#fffdfb; --shadow:0 24px 60px rgba(53,37,37,.12); }
+:root { --paper:#f2f1ef; --paper-deep:#e4e1df; --ink:#282625; --muted:#625d5b; --berry:#9b3e44; --berry-dark:#762f35; --rose:#cf8c8d; --line:#d7d0cd; --white:#fffdfb; --shadow:0 24px 60px rgba(53,37,37,.12); }
 .demo-ribbon,.intro-band,.booking-section { background:#393131; color:#fff9f6; }
 .demo-ribbon { color:#f0c5c3; }
-.button { background:#a8444a; border-color:#a8444a; color:#fffdfb; }
-.button:hover { background:#85373c; border-color:#85373c; }
-.hero-copy h1 em,.section-heading h2 em,.booking-intro h2 em { color:#b54f55; }
+.button { background:#91383d; border-color:#91383d; color:#fffdfb; }
+.button:hover { background:#762f35; border-color:#762f35; }
+.hero-copy h1 em,.section-heading h2 em,.booking-intro h2 em { color:#9b3e44; }
 .contacts-section,.team-section.bez-povoda-team-section { background:#e9e5e3; }
 .contact-details a,.service-price { color:#762f35; }
 .site-footer { background:#282323; color:#fff9f6; }
@@ -4513,3 +4513,23 @@ html.modal-scroll-locked {
 .brand-mark.bez-mark,.aside-mark.bez-mark { width:106px; height:58px; border-radius:0; object-fit:contain; background:#777674; }
 .booking-section .aside-mark.bez-mark { width:76px; height:42px; }
 .nail-red span { background:linear-gradient(125deg,#f0c5c3,#b54f55 65%,#762f35); }
+
+.date-option:disabled,
+.date-option.is-past:disabled {
+  border-color: #d4c9c1;
+  background: #ece7e2;
+  color: #543b2c;
+  opacity: 1;
+}
+
+.slot-option.is-busy,
+.slot-option.is-busy:disabled,
+.slot-option.is-busy small,
+.profile-status.is-past {
+  color: var(--berry-dark);
+}
+
+.calendar-note,
+.date-option .calendar-day-status {
+  color: #625752;
+}

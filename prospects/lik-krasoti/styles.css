@@ -4497,12 +4497,12 @@ html.modal-scroll-locked {
 
 
 /* ЛИК КРАСОТЫ — шелковистые слои таупа, пудры и мягкого шампанского. */
-:root { --paper:#f6f0ed; --paper-deep:#e9ddd7; --ink:#342b29; --muted:#7b6b65; --berry:#a47e70; --berry-dark:#6b5149; --rose:#d7bdb1; --line:#dfd0c8; --white:#fffaf7; --shadow:0 24px 60px rgba(76,53,45,.1); }
+:root { --paper:#f6f0ed; --paper-deep:#e9ddd7; --ink:#342b29; --muted:#6a5a54; --berry:#795c52; --berry-dark:#6b5149; --rose:#d7bdb1; --line:#dfd0c8; --white:#fffaf7; --shadow:0 24px 60px rgba(76,53,45,.1); }
 .demo-ribbon,.intro-band,.booking-section { background:#766057; color:#fff8f2; }
 .demo-ribbon { color:#f1ded3; }
-.button { background:#9c7568; border-color:#9c7568; color:#fffaf7; }
-.button:hover { background:#79594f; border-color:#79594f; }
-.hero-copy h1 em,.section-heading h2 em,.booking-intro h2 em { color:#a47e70; }
+.button { background:#76574c; border-color:#76574c; color:#fffaf7; }
+.button:hover { background:#63483f; border-color:#63483f; }
+.hero-copy h1 em,.section-heading h2 em,.booking-intro h2 em { color:#795c52; }
 .contacts-section,.team-section.lik-krasoti-team-section { background:#ebe0db; }
 .contact-details a,.service-price { color:#6b5149; }
 .site-footer { background:#403330; color:#fff8f2; }
@@ -4513,3 +4513,23 @@ html.modal-scroll-locked {
 .brand-mark.lik-mark,.aside-mark.lik-mark { width:52px; height:52px; border-radius:50%; object-fit:cover; }
 .booking-section .aside-mark.lik-mark { width:42px; height:42px; }
 .lik-krasoty-hero-art::before { background:linear-gradient(135deg,rgba(255,247,242,.08),rgba(255,247,242,.16)); mix-blend-mode:screen; }
+
+.date-option:disabled,
+.date-option.is-past:disabled {
+  border-color: #d4c9c1;
+  background: #ece7e2;
+  color: #543b2c;
+  opacity: 1;
+}
+
+.slot-option.is-busy,
+.slot-option.is-busy:disabled,
+.slot-option.is-busy small,
+.profile-status.is-past {
+  color: var(--berry-dark);
+}
+
+.calendar-note,
+.date-option .calendar-day-status {
+  color: #625752;
+}

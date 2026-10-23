@@ -4497,12 +4497,12 @@ html.modal-scroll-locked {
 
 
 /* SOUL — медовые, сливочные и карамельные оттенки исходного фирменного знака. */
-:root { --paper:#f8f0e4; --paper-deep:#ead8bf; --ink:#33261b; --muted:#796653; --berry:#b7793b; --berry-dark:#70431f; --rose:#d7aa71; --line:#dfc9aa; --white:#fffaf2; --shadow:0 24px 60px rgba(89,57,25,.12); }
+:root { --paper:#f8f0e4; --paper-deep:#ead8bf; --ink:#33261b; --muted:#6f5c49; --berry:#865522; --berry-dark:#70431f; --rose:#d7aa71; --line:#dfc9aa; --white:#fffaf2; --shadow:0 24px 60px rgba(89,57,25,.12); }
 .demo-ribbon,.intro-band,.booking-section { background:#60452c; color:#fff8ed; }
 .demo-ribbon { color:#f2d8ae; }
-.button { background:#ae7139; border-color:#ae7139; color:#fffaf2; }
-.button:hover { background:#87582d; border-color:#87582d; }
-.hero-copy h1 em,.section-heading h2 em,.booking-intro h2 em { color:#bd8043; }
+.button { background:#865522; border-color:#865522; color:#fffaf2; }
+.button:hover { background:#70431f; border-color:#70431f; }
+.hero-copy h1 em,.section-heading h2 em,.booking-intro h2 em { color:#865522; }
 .contacts-section { background:#efe2cf; }
 .contact-details a,.service-price { color:#70431f; }
 .site-footer { background:#35261b; color:#fff8ed; }
@@ -4512,3 +4512,23 @@ html.modal-scroll-locked {
 .soul-hero-image img { width:100%; height:100%; display:block; object-fit:cover; }
 .brand-mark.soul-mark,.aside-mark.soul-mark { width:112px; height:52px; border-radius:0; object-fit:contain; background:transparent; }
 .booking-section .aside-mark.soul-mark { width:80px; height:42px; }
+
+.date-option:disabled,
+.date-option.is-past:disabled {
+  border-color: #d4c9c1;
+  background: #ece7e2;
+  color: #543b2c;
+  opacity: 1;
+}
+
+.slot-option.is-busy,
+.slot-option.is-busy:disabled,
+.slot-option.is-busy small,
+.profile-status.is-past {
+  color: var(--berry-dark);
+}
+
+.calendar-note,
+.date-option .calendar-day-status {
+  color: #625752;
+}
