@@ -196,6 +196,7 @@ input:focus-visible {
     min-height: 610px;
     display: grid;
     grid-template-columns: 1.05fr .95fr;
+    gap: clamp(20px, 2.4vw, 32px);
     align-items: center;
     position: relative;
     padding-top: 57px;
