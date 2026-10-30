@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f0e9">
+  <meta name="description" content="Пять демонстрационных концептов сайтов для студий красоты в Липецке.">
+  <title>Концепты сайтов · Липецк</title>
+  <style>
+    :root { color-scheme: light; --paper:#f4f0e9; --ink:#25342d; --muted:#66716a; --line:#d9ded8; --green:#1e4c3b; --white:#fffefa; --wrap:1100px; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--paper); color:var(--ink); font-family:Inter,"Segoe UI",Arial,sans-serif; line-height:1.6; }
+    a { color:inherit; }
+    a:focus-visible { outline:3px solid #27684f; outline-offset:4px; }
+    .wrap { width:min(var(--wrap),100% - 40px); margin-inline:auto; }
+    header { padding:clamp(48px,9vw,112px) 0 48px; }
+    .eyebrow { color:var(--green); font-size:12px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; }
+    h1 { max-width:800px; margin:16px 0; font-family:Georgia,"Times New Roman",serif; font-size:clamp(40px,8vw,82px); font-weight:400; line-height:1.02; letter-spacing:-.04em; }
+    h1 em { color:var(--green); }
+    .lead { max-width:620px; color:var(--muted); font-size:17px; }
+    .concept-note { margin-top:22px; padding:12px 16px; border-left:3px solid var(--green); background:#e7ebe4; color:#39463e; font-size:13px; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; padding-bottom:68px; }
+    .card { min-height:220px; display:flex; flex-direction:column; justify-content:space-between; gap:20px; padding:24px; border:1px solid var(--line); border-radius:20px; background:var(--white); text-decoration:none; transition:transform .2s ease,box-shadow .2s ease; }
+    .card:hover { transform:translateY(-3px); box-shadow:0 18px 40px #26382e12; }
+    .card-head { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+    .card h2 { margin:0; font-family:Georgia,"Times New Roman",serif; font-size:30px; font-weight:500; }
+    .swatch { width:46px; height:46px; flex:none; border-radius:50%; background:var(--swatch); box-shadow:inset 0 0 0 1px #1c2b2018; }
+    .card p { max-width:380px; margin:0; color:var(--muted); font-size:14px; }
+    .open { display:flex; align-items:center; gap:9px; color:var(--green); font-size:13px; font-weight:700; }
+    .open svg { width:17px; height:17px; fill:none; stroke:currentColor; stroke-width:1.8; }
+    footer { padding:20px 0 34px; border-top:1px solid var(--line); color:var(--muted); font-size:12px; }
+    @media (max-width:650px) { .wrap { width:min(var(--wrap),100% - 28px); } .grid { grid-template-columns:1fr; } .card { min-height:190px; } }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto !important; transition-duration:.01ms !important; animation-duration:.01ms !important; animation-iteration-count:1 !important; } }
+  </style>
+</head>
+<body>
+  <header class="wrap">
+    <p class="eyebrow">Липецк · дизайн-концепты</p>
+    <h1>Пять идей для <em>цифровой витрины</em></h1>
+    <p class="lead">Каждый концепт показывает меню, команду, визуальную подачу и полный путь демонстрационной записи.</p>
+    <p class="concept-note">Это не официальные сайты студий. Данные, кроме цен из переданных прайсов Bocha Home и ВТОПЕ, условные. Запись не отправляется салонам и сохраняется только в браузере.</p>
+  </header>
+  <main class="wrap">
+    <div class="grid">
+      <a class="card" href="./bocha-home/" style="--swatch:#d5c4cf">
+        <div class="card-head"><h2>Bocha Home</h2><span class="swatch" aria-hidden="true"></span></div>
+        <p>Тёплая пудровая палитра, лесной зелёный и цены из присланного прайса.</p>
+        <span class="open">Открыть концепт <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+      </a>
+      <a class="card" href="./vtope/" style="--swatch:#164c3b">
+        <div class="card-head"><h2>ВТОПЕ</h2><span class="swatch" aria-hidden="true"></span></div>
+        <p>Глубокий хвойный оттенок, строгая типографика и пять выбранных услуг из прайса.</p>
+        <span class="open">Открыть концепт <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+      </a>
+      <a class="card" href="./blik/" style="--swatch:#b89a55">
+        <div class="card-head"><h2>Blik</h2><span class="swatch" aria-hidden="true"></span></div>
+        <p>Мягкий светлый фон, золотистые детали и демонстрационное меню услуг.</p>
+        <span class="open">Открыть концепт <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+      </a>
+      <a class="card" href="./koko/" style="--swatch:#39644c">
+        <div class="card-head"><h2>KOKO</h2><span class="swatch" aria-hidden="true"></span></div>
+        <p>Свежая бело-зелёная подача с упоминанием обучения, маникюра и педикюра.</p>
+        <span class="open">Открыть концепт <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+      </a>
+      <a class="card" href="./lokon/" style="--swatch:#76513f">
+        <div class="card-head"><h2>LOKON</h2><span class="swatch" aria-hidden="true"></span></div>
+        <p>Тёплая кремовая палитра и собственный знак с графическим мотивом локона.</p>
+        <span class="open">Открыть концепт <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+      </a>
+    </div>
+  </main>
+  <footer><div class="wrap">Портфолио-концепты · демонстрационные данные и сценарии записи</div></footer>
+</body>
+</html>
