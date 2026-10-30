@@ -606,6 +606,10 @@ h1 {
 }
 
 .hero-art picture {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
   height: 100%;
   overflow: hidden;
   border-radius: var(--radius-lg);
@@ -3184,20 +3188,13 @@ h1 {
 
 
 
-/* Prospect theme and custom hero artwork */
+/* Prospect theme and hero artwork */
 :root { --paper: #f4eeeb; --paper-deep: #e7dce3; --paper-soft: #fbf7f5; --white: #fffdfc; --ink: #2c302d; --ink-soft: #4e5752; --muted: #676c68; --berry: #215342; --berry-dark: #173d31; --berry-soft: #e1ebe5; --rose: #bf1d72; --line: #dfd4d5; --line-strong: #c7babc; --serif: "Lora", Georgia, serif; }
 :focus-visible { outline-color: #aa1767; }
 h1 em, h2 em, h3 em { color: var(--berry); }
 .nav-link:hover, .nav-link[aria-current="true"] { color: var(--berry); background: color-mix(in srgb, var(--berry) 8%, transparent); }
 .header-cta, .button:not(.button-outline) { box-shadow: 0 8px 22px color-mix(in srgb, var(--berry) 18%, transparent); }
 .hero-art::before { border-color: color-mix(in srgb, var(--berry) 34%, transparent); }
-.hero-art .hero-poster { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; box-shadow: var(--shadow-md); }
-.poster-mark { position: absolute; top: 12%; left: 13%; z-index: 1; font-size: clamp(20px, 3vw, 32px); }
-.poster-orbit { position: absolute; display: block; pointer-events: none; }
-.poster-kicker { position: relative; z-index: 1; margin-bottom: 8px; font-size: 9px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
-.poster-word { position: relative; z-index: 1; line-height: 1; }
-.poster-tag { position: absolute; z-index: 1; left: 13%; bottom: 13%; max-width: 40%; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
-.poster-index { position: absolute; right: 12%; bottom: 12%; z-index: 1; padding: 7px 10px; border: 1px solid currentColor; border-radius: var(--radius-pill); font-size: 9px; letter-spacing: .1em; }
 .art-caption { z-index: 2; }
 .demo-ribbon { background: var(--berry-dark); }
 .site-header { border-bottom-color: var(--line); }
@@ -3211,8 +3208,8 @@ h1 em, h2 em, h3 em { color: var(--berry); }
 .site-footer { background: var(--berry-dark); color: var(--white); }
 .site-footer .brand-name, .site-footer a { color: var(--white); }
 .site-footer .brand-name > span { color: color-mix(in srgb, var(--white) 76%, transparent); }
-.hero-art--bocha .hero-poster { aspect-ratio: 1.1; }
 .hero-art--bocha .art-caption-top { top: 22px; left: 22px; }
 .hero-art--bocha .art-caption-bottom { right: 22px; bottom: 22px; }
 @media (max-width: 700px) { .hero-art--bocha { aspect-ratio: 1.05; } .hero-art--bocha .art-caption { font-size: 7px; padding: 7px 9px; } .hero-art--bocha .art-caption em { font-size: 10px; } }
-.hero-art--bocha .hero-poster{background:radial-gradient(circle at 73% 22%,#f3e5ec 0 17%,transparent 17.5%),linear-gradient(140deg,#d9c7d2 0%,#eee4e9 52%,#f8f0ec 100%);color:#234b3b}.hero-art--bocha .poster-mark{font-family:var(--serif);font-style:italic;color:#b50c67}.hero-art--bocha .poster-orbit{border:1px solid rgba(33,83,66,.38);border-radius:50%;width:68%;height:68%;transform:rotate(-19deg)}.hero-art--bocha .poster-orbit::after{content:"";position:absolute;inset:10%;border:1px solid rgba(181,12,103,.3);border-radius:50%;transform:rotate(34deg)}.hero-art--bocha .poster-word{font-family:var(--serif);font-size:clamp(54px,8vw,108px);letter-spacing:-.08em}.hero-art--bocha .poster-tag{color:#4b5750}
+
+.hero-art--bocha picture { border-radius: var(--radius-lg); }

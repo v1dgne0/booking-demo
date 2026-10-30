@@ -606,6 +606,10 @@ h1 {
 }
 
 .hero-art picture {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
   height: 100%;
   overflow: hidden;
   border-radius: var(--radius-lg);
@@ -3184,20 +3188,13 @@ h1 {
 
 
 
-/* Prospect theme and custom hero artwork */
+/* Prospect theme and hero artwork */
 :root { --paper: #f1f4ef; --paper-deep: #e2ebe3; --paper-soft: #f8faf7; --white: #fffefa; --ink: #26382e; --ink-soft: #41564a; --muted: #64746a; --berry: #39644c; --berry-dark: #254936; --berry-soft: #e2eee4; --rose: #98b79d; --line: #d7e2d8; --line-strong: #b9cbbb; --serif: "Nunito Sans", "Segoe UI", sans-serif; }
 :focus-visible { outline-color: #39734c; }
 h1 em, h2 em, h3 em { color: var(--berry); }
 .nav-link:hover, .nav-link[aria-current="true"] { color: var(--berry); background: color-mix(in srgb, var(--berry) 8%, transparent); }
 .header-cta, .button:not(.button-outline) { box-shadow: 0 8px 22px color-mix(in srgb, var(--berry) 18%, transparent); }
 .hero-art::before { border-color: color-mix(in srgb, var(--berry) 34%, transparent); }
-.hero-art .hero-poster { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; box-shadow: var(--shadow-md); }
-.poster-mark { position: absolute; top: 12%; left: 13%; z-index: 1; font-size: clamp(20px, 3vw, 32px); }
-.poster-orbit { position: absolute; display: block; pointer-events: none; }
-.poster-kicker { position: relative; z-index: 1; margin-bottom: 8px; font-size: 9px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
-.poster-word { position: relative; z-index: 1; line-height: 1; }
-.poster-tag { position: absolute; z-index: 1; left: 13%; bottom: 13%; max-width: 40%; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
-.poster-index { position: absolute; right: 12%; bottom: 12%; z-index: 1; padding: 7px 10px; border: 1px solid currentColor; border-radius: var(--radius-pill); font-size: 9px; letter-spacing: .1em; }
 .art-caption { z-index: 2; }
 .demo-ribbon { background: var(--berry-dark); }
 .site-header { border-bottom-color: var(--line); }
@@ -3211,8 +3208,8 @@ h1 em, h2 em, h3 em { color: var(--berry); }
 .site-footer { background: var(--berry-dark); color: var(--white); }
 .site-footer .brand-name, .site-footer a { color: var(--white); }
 .site-footer .brand-name > span { color: color-mix(in srgb, var(--white) 76%, transparent); }
-.hero-art--koko .hero-poster { aspect-ratio: 1.1; }
 .hero-art--koko .art-caption-top { top: 22px; left: 22px; }
 .hero-art--koko .art-caption-bottom { right: 22px; bottom: 22px; }
 @media (max-width: 700px) { .hero-art--koko { aspect-ratio: 1.05; } .hero-art--koko .art-caption { font-size: 7px; padding: 7px 9px; } .hero-art--koko .art-caption em { font-size: 10px; } }
-.hero-art--koko .hero-poster{background:linear-gradient(145deg,#f8faf6,#dce8dc);color:#345a43;border-radius:36% 36% 22px 22px}.hero-art--koko .poster-mark{color:#52755d}.hero-art--koko .poster-orbit{inset:9% 14% 7%;border:1px solid rgba(57,100,76,.36);border-radius:48% 48% 22px 22px;transform:rotate(0)}.hero-art--koko .poster-orbit::after{content:"";position:absolute;inset:10%;border:1px solid rgba(57,100,76,.2);border-radius:inherit}.hero-art--koko .poster-word{font-family:var(--sans);font-size:clamp(60px,9vw,118px);font-weight:800;letter-spacing:.04em}.hero-art--koko .poster-tag{color:#476a50}
+
+.hero-art--koko picture { border-radius: 36% 36% 22px 22px; }
