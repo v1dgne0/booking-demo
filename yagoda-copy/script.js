@@ -582,8 +582,8 @@ function renderServices() {
   $$("[data-service]", serviceList).forEach(button => {
     button.addEventListener("click", () => {
       selectService(button.dataset.service);
-      setStep(2, { focus: true, scroll: true });
-      showToast("Услуга выбрана. Осталось выбрать время.");
+      setStep(1, { focus: true, scroll: true });
+      showToast("Услуга выбрана. Теперь выберите мастера и нажмите «Продолжить».");
     });
   });
 }
