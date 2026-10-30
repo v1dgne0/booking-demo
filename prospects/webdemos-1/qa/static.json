@@ -1,0 +1,47 @@
+[
+  {
+    "slug": "mvz-friends",
+    "missingFiles": [],
+    "brokenFragments": [],
+    "duplicateIds": [],
+    "bytes": 1085427,
+    "originalFunctionsPreserved": true,
+    "reducedMotionRule": true
+  },
+  {
+    "slug": "voskhishchenie",
+    "missingFiles": [],
+    "brokenFragments": [],
+    "duplicateIds": [],
+    "bytes": 681462,
+    "originalFunctionsPreserved": true,
+    "reducedMotionRule": true
+  },
+  {
+    "slug": "brusnika",
+    "missingFiles": [],
+    "brokenFragments": [],
+    "duplicateIds": [],
+    "bytes": 778146,
+    "originalFunctionsPreserved": true,
+    "reducedMotionRule": true
+  },
+  {
+    "slug": "tvoe-zhelanie",
+    "missingFiles": [],
+    "brokenFragments": [],
+    "duplicateIds": [],
+    "bytes": 771354,
+    "originalFunctionsPreserved": true,
+    "reducedMotionRule": true
+  },
+  {
+    "slug": "luna",
+    "missingFiles": [],
+    "brokenFragments": [],
+    "duplicateIds": [],
+    "bytes": 813539,
+    "originalFunctionsPreserved": true,
+    "reducedMotionRule": true
+  }
+]

@@ -1,0 +1,112 @@
+[
+  {
+    "slug": "mvz-friends",
+    "mobile": {
+      "brokenImages": 0,
+      "overflow": [],
+      "scrollWidth": 375,
+      "title": "Mvz Friends — дизайн-концепт",
+      "width": 390
+    },
+    "narrow": {
+      "brokenImages": 0,
+      "overflow": [],
+      "scrollWidth": 305,
+      "title": "Mvz Friends — дизайн-концепт",
+      "width": 320
+    },
+    "keyboard": {
+      "outline": "solid",
+      "tag": "A",
+      "width": "3px"
+    }
+  },
+  {
+    "slug": "voskhishchenie",
+    "mobile": {
+      "brokenImages": 0,
+      "overflow": [],
+      "scrollWidth": 375,
+      "title": "Восхищение — дизайн-концепт",
+      "width": 390
+    },
+    "narrow": {
+      "brokenImages": 0,
+      "overflow": [],
+      "scrollWidth": 305,
+      "title": "Восхищение — дизайн-концепт",
+      "width": 320
+    },
+    "keyboard": {
+      "outline": "solid",
+      "tag": "A",
+      "width": "3px"
+    }
+  },
+  {
+    "slug": "brusnika",
+    "mobile": {
+      "brokenImages": 0,
+      "overflow": [],
+      "scrollWidth": 375,
+      "title": "BRUSNIKA — дизайн-концепт",
+      "width": 390
+    },
+    "narrow": {
+      "brokenImages": 0,
+      "overflow": [],
+      "scrollWidth": 305,
+      "title": "BRUSNIKA — дизайн-концепт",
+      "width": 320
+    },
+    "keyboard": {
+      "outline": "solid",
+      "tag": "A",
+      "width": "3px"
+    }
+  },
+  {
+    "slug": "tvoe-zhelanie",
+    "mobile": {
+      "brokenImages": 0,
+      "overflow": [],
+      "scrollWidth": 375,
+      "title": "Твое желание — дизайн-концепт",
+      "width": 390
+    },
+    "narrow": {
+      "brokenImages": 0,
+      "overflow": [],
+      "scrollWidth": 305,
+      "title": "Твое желание — дизайн-концепт",
+      "width": 320
+    },
+    "keyboard": {
+      "outline": "solid",
+      "tag": "A",
+      "width": "3px"
+    }
+  },
+  {
+    "slug": "luna",
+    "mobile": {
+      "brokenImages": 0,
+      "overflow": [],
+      "scrollWidth": 375,
+      "title": "ЛуНа — дизайн-концепт",
+      "width": 390
+    },
+    "narrow": {
+      "brokenImages": 0,
+      "overflow": [],
+      "scrollWidth": 305,
+      "title": "ЛуНа — дизайн-концепт",
+      "width": 320
+    },
+    "keyboard": {
+      "outline": "solid",
+      "tag": "A",
+      "width": "3px"
+    }
+  }
+]

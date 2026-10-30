@@ -1,0 +1,242 @@
+[
+  {
+    "slug": "mvz-friends",
+    "wide": {
+      "brokenImages": 0,
+      "overflow": [],
+      "scrollWidth": 1425,
+      "title": "Mvz Friends — дизайн-концепт",
+      "width": 1440
+    },
+    "mobile": {
+      "brokenImages": 0,
+      "overflow": [],
+      "scrollWidth": 375,
+      "title": "Mvz Friends — дизайн-концепт",
+      "width": 390
+    },
+    "menuOpened": "true",
+    "menuClosedAfterLink": "false",
+    "menuEscape": "false",
+    "emptyProfile": true,
+    "focusReturned": "profile-toggle",
+    "emptyReviews": true,
+    "palette": 16,
+    "keyboardFocus": {
+      "outline": "solid",
+      "width": "3px"
+    },
+    "keyboardService": "Маникюр + однотон",
+    "missingDate": true,
+    "monthChanged": true,
+    "disabledDates": 9,
+    "busySlots": 1,
+    "missingTime": true,
+    "invalidName": true,
+    "invalidPhone": true,
+    "success": true,
+    "successText": "Маникюр + однотон · Мира · 3 ноября, 14:00 · 2 300 ₽",
+    "finalMobile": {
+      "brokenImages": 0,
+      "overflow": [],
+      "scrollWidth": 375,
+      "title": "Mvz Friends — дизайн-концепт",
+      "width": 390
+    },
+    "savedBooking": 1,
+    "cancelConfirmation": 1,
+    "cancelled": true
+  },
+  {
+    "slug": "voskhishchenie",
+    "wide": {
+      "brokenImages": 0,
+      "overflow": [],
+      "scrollWidth": 1425,
+      "title": "Восхищение — дизайн-концепт",
+      "width": 1440
+    },
+    "mobile": {
+      "brokenImages": 0,
+      "overflow": [],
+      "scrollWidth": 375,
+      "title": "Восхищение — дизайн-концепт",
+      "width": 390
+    },
+    "menuOpened": "true",
+    "menuClosedAfterLink": "false",
+    "menuEscape": "false",
+    "emptyProfile": true,
+    "focusReturned": "profile-toggle",
+    "emptyReviews": true,
+    "palette": 16,
+    "keyboardFocus": {
+      "outline": "solid",
+      "width": "3px"
+    },
+    "keyboardService": "Маникюр + однотон",
+    "missingDate": true,
+    "monthChanged": true,
+    "disabledDates": 9,
+    "busySlots": 1,
+    "missingTime": true,
+    "invalidName": true,
+    "invalidPhone": true,
+    "success": true,
+    "successText": "Маникюр + однотон · Мира · 3 ноября, 14:00 · 2 300 ₽",
+    "finalMobile": {
+      "brokenImages": 0,
+      "overflow": [],
+      "scrollWidth": 375,
+      "title": "Восхищение — дизайн-концепт",
+      "width": 390
+    },
+    "savedBooking": 1,
+    "cancelConfirmation": 1,
+    "cancelled": true
+  },
+  {
+    "slug": "brusnika",
+    "wide": {
+      "brokenImages": 0,
+      "overflow": [],
+      "scrollWidth": 1425,
+      "title": "BRUSNIKA — дизайн-концепт",
+      "width": 1440
+    },
+    "mobile": {
+      "brokenImages": 0,
+      "overflow": [],
+      "scrollWidth": 375,
+      "title": "BRUSNIKA — дизайн-концепт",
+      "width": 390
+    },
+    "menuOpened": "true",
+    "menuClosedAfterLink": "false",
+    "menuEscape": "false",
+    "emptyProfile": true,
+    "focusReturned": "profile-toggle",
+    "emptyReviews": true,
+    "palette": 16,
+    "keyboardFocus": {
+      "outline": "solid",
+      "width": "3px"
+    },
+    "keyboardService": "Маникюр + однотон",
+    "missingDate": true,
+    "monthChanged": true,
+    "disabledDates": 9,
+    "busySlots": 1,
+    "missingTime": true,
+    "invalidName": true,
+    "invalidPhone": true,
+    "success": true,
+    "successText": "Маникюр + однотон · Мира · 3 ноября, 14:00 · 2 300 ₽",
+    "finalMobile": {
+      "brokenImages": 0,
+      "overflow": [],
+      "scrollWidth": 375,
+      "title": "BRUSNIKA — дизайн-концепт",
+      "width": 390
+    },
+    "savedBooking": 1,
+    "cancelConfirmation": 1,
+    "cancelled": true
+  },
+  {
+    "slug": "tvoe-zhelanie",
+    "wide": {
+      "brokenImages": 0,
+      "overflow": [],
+      "scrollWidth": 1425,
+      "title": "Твое желание — дизайн-концепт",
+      "width": 1440
+    },
+    "mobile": {
+      "brokenImages": 0,
+      "overflow": [],
+      "scrollWidth": 375,
+      "title": "Твое желание — дизайн-концепт",
+      "width": 390
+    },
+    "menuOpened": "true",
+    "menuClosedAfterLink": "false",
+    "menuEscape": "false",
+    "emptyProfile": true,
+    "focusReturned": "profile-toggle",
+    "emptyReviews": true,
+    "palette": 16,
+    "keyboardFocus": {
+      "outline": "solid",
+      "width": "3px"
+    },
+    "keyboardService": "Маникюр + однотон",
+    "missingDate": true,
+    "monthChanged": true,
+    "disabledDates": 9,
+    "busySlots": 1,
+    "missingTime": true,
+    "invalidName": true,
+    "invalidPhone": true,
+    "success": true,
+    "successText": "Маникюр + однотон · Мира · 3 ноября, 14:00 · 2 300 ₽",
+    "finalMobile": {
+      "brokenImages": 0,
+      "overflow": [],
+      "scrollWidth": 375,
+      "title": "Твое желание — дизайн-концепт",
+      "width": 390
+    },
+    "savedBooking": 1,
+    "cancelConfirmation": 1,
+    "cancelled": true
+  },
+  {
+    "slug": "luna",
+    "wide": {
+      "brokenImages": 0,
+      "overflow": [],
+      "scrollWidth": 1425,
+      "title": "ЛуНа — дизайн-концепт",
+      "width": 1440
+    },
+    "mobile": {
+      "brokenImages": 0,
+      "overflow": [],
+      "scrollWidth": 375,
+      "title": "ЛуНа — дизайн-концепт",
+      "width": 390
+    },
+    "menuOpened": "true",
+    "menuClosedAfterLink": "false",
+    "menuEscape": "false",
+    "emptyProfile": true,
+    "focusReturned": "profile-toggle",
+    "emptyReviews": true,
+    "palette": 16,
+    "keyboardFocus": {
+      "outline": "solid",
+      "width": "3px"
+    },
+    "keyboardService": "Маникюр + однотон",
+    "missingDate": true,
+    "monthChanged": true,
+    "disabledDates": 9,
+    "busySlots": 1,
+    "missingTime": true,
+    "invalidName": true,
+    "invalidPhone": true,
+    "success": true,
+    "successText": "Маникюр + однотон · Мира · 3 ноября, 14:00 · 2 300 ₽",
+    "finalMobile": {
+      "brokenImages": 0,
+      "overflow": [],
+      "scrollWidth": 375,
+      "title": "ЛуНа — дизайн-концепт",
+      "width": 390
+    },
+    "savedBooking": 1,
+    "cancelConfirmation": 1,
+    "cancelled": true
+  }
+]

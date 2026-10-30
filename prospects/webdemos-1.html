@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f0e9">
+  <meta name="description" content="Webdemos 1 — пять дизайн-концептов сайтов салонов красоты.">
+  <link rel="icon" type="image/svg+xml" href="./luna/assets/logo.svg">
+  <title>Webdemos 1 · пять салонов</title>
+  <style>
+    :root { color-scheme: light; --paper:#f4f0e9; --ink:#25342d; --muted:#66716a; --line:#d9ded8; --green:#1e4c3b; --white:#fffefa; --wrap:1100px; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--paper); color:var(--ink); font-family:Inter,"Segoe UI",Arial,sans-serif; line-height:1.6; }
+    a { color:inherit; }
+    a:focus-visible { outline:3px solid #27684f; outline-offset:4px; }
+    .wrap { width:min(var(--wrap),100% - 40px); margin-inline:auto; }
+    header { padding:clamp(48px,9vw,112px) 0 48px; }
+    .eyebrow { color:var(--green); font-size:12px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; }
+    h1 { max-width:800px; margin:16px 0; font-family:Georgia,"Times New Roman",serif; font-size:clamp(40px,8vw,82px); font-weight:400; line-height:1.02; letter-spacing:-.04em; }
+    h1 em { color:var(--green); }
+    .lead { max-width:620px; color:var(--muted); font-size:17px; }
+    .concept-note { margin-top:22px; padding:12px 16px; border-left:3px solid var(--green); background:#e7ebe4; color:#39463e; font-size:13px; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; padding-bottom:68px; }
+    .card { min-height:220px; display:flex; flex-direction:column; justify-content:space-between; gap:20px; padding:24px; border:1px solid var(--line); border-radius:20px; background:var(--white); text-decoration:none; transition:transform .2s ease,box-shadow .2s ease; }
+    .card:hover { transform:translateY(-3px); box-shadow:0 18px 40px #26382e12; }
+    .card-head { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+    .card h2 { margin:0; font-family:Georgia,"Times New Roman",serif; font-size:30px; font-weight:500; }
+    .swatch { width:46px; height:46px; flex:none; border-radius:50%; background:var(--swatch); box-shadow:inset 0 0 0 1px #1c2b2018; }
+    .card p { max-width:380px; margin:0; color:var(--muted); font-size:14px; }
+    .open { display:flex; align-items:center; gap:9px; color:var(--green); font-size:13px; font-weight:700; }
+    .open svg { width:17px; height:17px; fill:none; stroke:currentColor; stroke-width:1.8; }
+    footer { padding:20px 0 34px; border-top:1px solid var(--line); color:var(--muted); font-size:12px; }
+    @media (max-width:650px) { .wrap { width:min(var(--wrap),100% - 28px); } .grid { grid-template-columns:1fr; } .card { min-height:190px; } }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto !important; transition-duration:.01ms !important; animation-duration:.01ms !important; animation-iteration-count:1 !important; } }
+  </style>
+</head>
+<body>
+  <header class="wrap">
+    <p class="eyebrow">Webdemos 1 · дизайн-концепты</p>
+    <h1>Пять характеров.<br><em>Пять историй красоты.</em></h1>
+    <p class="lead">Каждый концепт показывает меню, команду, визуальную подачу и полный путь демонстрационной записи.</p>
+    <p class="concept-note">Это не официальные сайты салонов. Услуги, цены, мастера, отзывы и расписание условные. Изображения маникюра созданы ИИ. Демо-запись сохраняется только в браузере и не отправляется салонам.</p>
+  </header>
+  <main class="wrap">
+    <div class="grid">
+      <a class="card" href="./mvz-friends/index.html" style="--swatch:#a80050">
+        <div class="card-head"><h2>Mvz Friends</h2><span class="swatch" aria-hidden="true"></span></div>
+        <p>Смелый цвет, графичные детали и маникюр с характером. Твой маленький способ быть собой.</p>
+        <span class="open">Открыть концепт <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+      </a>
+      <a class="card" href="./voskhishchenie/index.html" style="--swatch:#7a3e68">
+        <div class="card-head"><h2>Восхищение</h2><span class="swatch" aria-hidden="true"></span></div>
+        <p>Нежные оттенки, мягкие линии и немного времени для себя. Красота, которую хочется рассматривать.</p>
+        <span class="open">Открыть концепт <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+      </a>
+      <a class="card" href="./brusnika/index.html" style="--swatch:#8e1435">
+        <div class="card-head"><h2>BRUSNIKA</h2><span class="swatch" aria-hidden="true"></span></div>
+        <p>Глубокие оттенки, выразительная форма и внимание к каждой детали. Твоя порция красивого настроения.</p>
+        <span class="open">Открыть концепт <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+      </a>
+      <a class="card" href="./tvoe-zhelanie/index.html" style="--swatch:#254c7a">
+        <div class="card-head"><h2>Твое желание</h2><span class="swatch" aria-hidden="true"></span></div>
+        <p>Спокойная роскошь глубоких оттенков и выверенных линий. Время, которое принадлежит только тебе.</p>
+        <span class="open">Открыть концепт <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+      </a>
+      <a class="card" href="./luna/index.html" style="--swatch:#246568">
+        <div class="card-head"><h2>ЛуНа</h2><span class="swatch" aria-hidden="true"></span></div>
+        <p>Лунный блеск, прохладные оттенки и красота в твоём ритме. Маленькое притяжение к себе.</p>
+        <span class="open">Открыть концепт <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+      </a>
+    </div>
+  </main>
+  <footer><div class="wrap">Портфолио-концепты · демонстрационные данные и сценарии записи</div></footer>
+</body>
+</html>

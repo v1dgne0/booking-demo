@@ -1,0 +1,42 @@
+[
+  {
+    "slug": "mvz-friends",
+    "saved": true,
+    "shown": true,
+    "ratingUpdated": true,
+    "corruptJsonFallback": true,
+    "cleared": "Тестовые данные удалены"
+  },
+  {
+    "slug": "voskhishchenie",
+    "saved": true,
+    "shown": true,
+    "ratingUpdated": true,
+    "corruptJsonFallback": true,
+    "cleared": "Тестовые данные удалены"
+  },
+  {
+    "slug": "brusnika",
+    "saved": true,
+    "shown": true,
+    "ratingUpdated": true,
+    "corruptJsonFallback": true,
+    "cleared": "Тестовые данные удалены"
+  },
+  {
+    "slug": "tvoe-zhelanie",
+    "saved": true,
+    "shown": true,
+    "ratingUpdated": true,
+    "corruptJsonFallback": true,
+    "cleared": "Тестовые данные удалены"
+  },
+  {
+    "slug": "luna",
+    "saved": true,
+    "shown": true,
+    "ratingUpdated": true,
+    "corruptJsonFallback": true,
+    "cleared": "Тестовые данные удалены"
+  }
+]
